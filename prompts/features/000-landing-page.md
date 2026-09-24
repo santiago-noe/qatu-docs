@@ -8,6 +8,7 @@
 - **Fuente de negocio:** docs/01-producto.md, docs/05-confianza-y-legal.md
 
 ## SPECIFY
+
 ```
 /speckit.specify Qatu necesita una página de inicio pública que explique en segundos qué es y por qué confiar: el lugar de Ayacucho para alquilar la herramienta que necesitas y contratar al técnico que te la resuelve (ver docs/01). Debe convertir visitantes en usuarios y prepararse para el lanzamiento piloto en Ayacucho (Perú), en español es-PE, moneda PEN.
 
@@ -31,6 +32,7 @@ Reglas: no se muestran precios, disponibilidad, reseñas ni cifras que no exista
 ```
 
 ## Preguntas guía para /speckit.clarify
+
 - ¿Se lanza primero solo con lista de espera o ya con registro/login? (define si hay endpoint en qatu-api)
 - ¿La lista de espera captura correo, celular o ambos? ¿Con qué consentimiento y para qué finalidad exacta?
 - ¿Hay marca y paleta definidas (logo, colores, tipografía) o se proponen?
@@ -42,6 +44,7 @@ Reglas: no se muestran precios, disponibilidad, reseñas ni cifras que no exista
 - ¿Se dispone de fotos e ilustraciones propias o se usan de stock libre de derechos?
 
 ## PLAN (extra) — pegar después de prompts/plan-base.md
+
 ```
 ARQUITECTURA
 
@@ -79,4 +82,7 @@ Tests y lint en verde, umbrales de Lighthouse cumplidos, textos revisados contra
 ```
 
 ## Guía para /speckit.tasks
+
 Ordenar así: 1) contenido y diseño (content.ts, tokens de marca), 2) layout y componentes de sección, 3) SEO y legal, 4) integración de sesión (proxy.ts), 5) lista de espera (api + BFF + formulario), 6) analítica con consentimiento, 7) pruebas e2e, accesibilidad y Lighthouse, 8) Dockerfile/gateway y despliegue. Marcar en paralelo `[P]` las secciones independientes.
+
+# Modificacion de Prueba
