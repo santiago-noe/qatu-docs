@@ -45,6 +45,7 @@ a otras ciudades del Perú.
 
 | Fase | Features |
 |---|---|
+| **F-1 Presencia** | 000 landing-page (2026-09-24) |
 | **F0 Fundación** | 001 cuentas-identidad · 002 categorias-ubicacion |
 | **F1 Oferta** | 003 publicaciones-alquiler · 004 perfiles-proveedores |
 | **F2 Descubrimiento** | 005 busqueda |
