@@ -62,7 +62,7 @@ Los tres viven lado a lado en una carpeta contenedora (`Qatu-Ayacucho/`), cada u
 | **F-1 Presencia** | 000 landing-page (2026-09-24) |
 | **F0 Fundación** | 001 cuentas-identidad · 002 categorias-ubicacion |
 | **F1 Oferta** | 003 publicaciones-alquiler · 004 perfiles-proveedores |
-| **F2 Descubrimiento** | 005 busqueda |
+| **F2 Descubrimiento** | 005 busqueda · 020 detalle-publicacion-mapa (después de 003 y 005; comparte el componente de mapa) |
 | **F3 Transacción** | 006 reservas-alquiler · 007 entrega-devolucion · 008 servicios-solicitud-cotizacion · 009 ejecucion-servicio |
 | **F4 Dinero** | 010 pagos-comisiones-liquidaciones · 011 garantia-deposito |
 | **F5 Confianza** | 012 mensajeria · 013 notificaciones · 014 resenas-reputacion · 015 incidencias-disputas-reclamaciones |
