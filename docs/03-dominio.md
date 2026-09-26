@@ -6,6 +6,10 @@
 (solicitudes, cotizaciones, trabajos) · `payments` (cobros, ledger, liquidaciones) · `deposits` ·
 `messaging` · `notifications` · `reviews` · `disputes` · `admin` · `ai` (post-MVP)
 
+Módulos de fases posteriores (docs/01), fuera del piloto: `products` (catálogo, inventario y pedidos de comercios
+locales, fase 3) y `spaces` (espacios y locales, fase 3). Inmuebles y vehículos (fase 4) requieren revisión legal
+antes de diseñarse. Se activan por `category.vertical` sin tocar el núcleo de identidad, pagos y disputas.
+
 ## Entidades principales
 | Entidad | Campos clave |
 |---|---|
@@ -13,8 +17,8 @@
 | IdentityVerification | user_id, type (DNI, SELFIE, ANTECEDENTES, CERTIFICADO_OFICIO, RUC), status, reviewed_by, files (privados) |
 | Business | owner_user_id, ruc, razón social, tipo (ferretería, alquiladora…) — perfil comercial opcional |
 | City / Zone | city (Ayacucho), zonas/distritos (Huamanga, San Juan Bautista, Carmen Alto, Jesús Nazareno, Andrés Avelino Cáceres) con polígono |
-| Category | árbol; vertical (RENTAL/SERVICE); attributes_schema (JSON Schema); default_commission; risk_level |
-| ToolListing | owner_id, category_id, title, attrs, photos, replacement_value, deposit_amount, prices{hour,day,weekend,week,month}, accessories[], pickup_location (point), delivery_options, booking_mode, cancel_policy, min_verification, status, version |
+| Category | árbol; vertical (RENTAL/SERVICE en el piloto; PRODUCT/SPACE en fases futuras); attributes_schema (JSON Schema); default_commission; risk_level; enabled_cities[] |
+| ToolListing | owner_id, city_id, zone_id, category_id, title, attrs, photos, replacement_value, deposit_amount, prices{hour,day,weekend,week,month}, accessories[], pickup_location (point exacto, privado), public_location (point ofuscado), public_radius_m, delivery_options, booking_mode, cancel_policy, min_verification, status, version |
 | AvailabilityBlock | listing_id, period tstzrange, reason (MANUAL, BOOKING, HOLD) |
 | ProviderProfile | user_id, trades[], bio, years_exp, coverage (zonas o radio), rates, packages[], weekly_availability, work_warranty_days, status |
 | ServicePackage | provider_id, trade, title, description, price, price_type (FIXED/HOURLY), min_hours, duration_est |
@@ -35,6 +39,17 @@
 | Complaint (Libro de Reclamaciones) | correlativo, datos consumidor, bien/servicio, tipo (RECLAMO/QUEJA), detalle, pedido, respuesta, plazos |
 | AuditLog | actor, action, entity, entity_id, before, after, at, ip |
 | OutboxEvent | aggregate, type, payload, published_at |
+
+## Ubicación y mapa
+Regla de privacidad: el mapa público nunca muestra el punto exacto (docs/05).
+- **`pickup_location`** guarda el punto exacto; solo lo ven el dueño y, tras confirmar la transacción, la contraparte.
+  Nunca se cachea en Redis ni se incluye en la ficha pública.
+- **`public_location`** se calcula al guardar la publicación: el punto exacto se desplaza dentro de un radio fijo
+  (`public_radius_m`, configurable en `platform_settings`) o se redondea. Es el que dibuja el mapa como círculo o zona y
+  el que usa la búsqueda por distancia (`ST_DWithin` con índice GIST).
+- El desplazamiento debe ser determinista por publicación (misma semilla), para que no se pueda promediar y recuperar el punto real.
+- La ficha muestra siempre el barrio o distrito (`zone_id`) y una distancia aproximada.
+- Los mismos criterios aplican a los proveedores a domicilio: se publica su zona de cobertura, no su dirección.
 
 ## Máquinas de estado
 
@@ -93,6 +108,10 @@ Reglas de implementación de estados:
 - Control de concurrencia optimista (`version`).
 
 ## Dinero
+- **Cuatro conceptos que no se mezclan** (propuesta v2.0, sección 7): pago del alquiler o servicio, garantía o
+  depósito, comisión de la plataforma y costos adicionales (delivery, materiales). Cada uno tiene su línea y su asiento.
+  Además, el flujo de una compra de producto (fase 3) es distinto al del alquiler: el dinero de la compra nunca se
+  mezcla con una garantía.
 - Moneda PEN, montos en **céntimos (integer)**. Redondeo bancario solo en el cálculo final de cada línea.
 - **Snapshot de precio**: al crear la reserva/trabajo se guarda el desglose completo (JSON inmutable);
   cambios posteriores de tarifa no afectan transacciones existentes.
