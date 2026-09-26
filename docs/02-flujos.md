@@ -13,16 +13,30 @@ Los tiempos (timeouts, ventanas) son **parámetros configurables** en `platform_
 4. Garantía/depósito sugerido por el sistema según valor declarado y categoría; editable dentro de rangos.
 5. Valor de reposición declarado (base para disputas).
 6. Accesorios incluidos (checklist que se usará en entrega/devolución).
-7. Logística: recojo en punto (dirección exacta privada, zona aproximada pública) y/o delivery con tarifa.
+7. Logística: recojo en punto y/o delivery con tarifa. El arrendador marca en un mapa el punto exacto (privado) y ve
+   una **vista previa de lo que se mostrará al público**: solo un círculo aproximado y el distrito o barrio.
 8. Reglas: requisitos del arrendatario (nivel de verificación mínimo), instrucciones de uso,
    política de cancelación (Flexible / Moderada / Estricta), modo de reserva (por solicitud | inmediata).
 9. Calendario: bloqueos manuales + antelación mínima + duración mín./máx.
 10. Estado inicial: `EN_REVISION` si es el primer anuncio o categoría de riesgo; si no, `PUBLICADA`.
 
 ### A2. Buscar y elegir (cliente)
-Búsqueda por texto/categoría + ubicación + fechas → solo se muestran herramientas **disponibles** en
-ese rango. Detalle muestra: fotos, precio calculado para las fechas, garantía, distancia aproximada,
-reputación del arrendador, política de cancelación y **desglose total antes de reservar**.
+**Búsqueda.** Texto/categoría + ubicación + fechas → solo se muestran herramientas **disponibles** en ese rango.
+Los resultados se ofrecen en **lista y en mapa**: cada resultado es un pin con su precio; al mover o acercar el mapa,
+la lista se actualiza a esa zona. Se puede ordenar por relevancia, distancia, precio o calificación.
+
+**Detalle de la publicación** (pantalla estilo Airbnb, con el mapa como parte central):
+1. Galería de fotos y título, con la categoría y el estado de verificación del arrendador.
+2. Precio calculado para las fechas elegidas, garantía, política de cancelación y reputación del arrendador.
+3. Calendario de disponibilidad: los días no disponibles aparecen bloqueados.
+4. **"Dónde se encuentra"**: mapa con un círculo de ubicación aproximada, el distrito o barrio y la distancia
+   aproximada desde el usuario. Nunca el punto exacto.
+5. Mensaje visible: *"La dirección exacta y el teléfono se comparten cuando se confirma la reserva."*
+6. Tarjeta fija de reserva con el **desglose total antes de reservar** (alquiler + tarifa + delivery + garantía).
+7. Otras herramientas cercanas del mismo arrendador o de la misma categoría.
+
+**Reglas.** El mapa se carga de forma diferida para no penalizar el rendimiento en móvil; si el usuario deniega su
+ubicación, se centra en el distrito elegido. La ubicación exacta se revela solo en el paso A3.6.
 
 ### A3. Reservar
 1. Cliente elige fechas/horas, modalidad (recojo/delivery) y franja de entrega.
