@@ -60,16 +60,17 @@ Los tres viven lado a lado en una carpeta contenedora (`Qatu-Ayacucho/`), cada u
 | Fase | Features |
 |---|---|
 | **F-1 Presencia** | 000 landing-page (2026-09-24) |
-| **F0 Fundación** | 001 cuentas-identidad · 002 categorias-ubicacion |
+| **F0 Fundación** | 001 cuentas-identidad (correo, contraseña y Google) · 021 verificacion-identidad (DNI, selfie, RUC; prompt pendiente) · 002 categorias-ubicacion |
 | **F1 Oferta** | 003 publicaciones-alquiler · 004 perfiles-proveedores |
 | **F2 Descubrimiento** | 005 busqueda · 020 detalle-publicacion-mapa (después de 003 y 005; comparte el componente de mapa) |
 | **F3 Transacción** | 006 reservas-alquiler · 007 entrega-devolucion · 008 servicios-solicitud-cotizacion · 009 ejecucion-servicio |
 | **F4 Dinero** | 010 pagos-comisiones-liquidaciones · 011 garantia-deposito |
-| **F5 Confianza** | 012 mensajeria · 013 notificaciones · 014 resenas-reputacion · 015 incidencias-disputas-reclamaciones |
+| **F5 Confianza** | 012 mensajeria · 013 notificaciones · 014 resenas-reputacion · 015 incidencias-disputas-reclamaciones · 022 acceso-celular-otp (cuando se elija proveedor de SMS o WhatsApp; prompt pendiente) |
 | **F6 Operación** | 016 admin-moderacion · 017 analitica-oferentes |
 | **F7 IA (post-MVP)** | 018 ia-busqueda-asistente · 019 ia-asistente-publicacion |
 
 **MVP piloto en Ayacucho = F0 a F5 con el adaptador de pago "manual/registrado"** (ver docs/03).
+El acceso del piloto es con correo y contraseña o Google; el OTP por celular (022) se agrega como un proveedor más sin rehacer cuentas ni sesiones (docs/04, "Acceso extensible").
 Las pasarelas reales (Mercado Pago split / Culqi) entran en F4 detrás de la misma interfaz.
 Las fases de producto posteriores (comercio, espacios, inmuebles y vehículos) están descritas en `docs/01-producto.md`
 y no tienen features todavía: se especifican cuando el piloto esté validado.
