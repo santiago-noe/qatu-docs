@@ -7,7 +7,7 @@
 - **Depende de:** ninguna feature. Es la primera pantalla pública y se puede lanzar antes que 001–005. El panel de búsqueda se conecta con 005 cuando exista.
 - **Fuente de negocio:** docs/01-producto.md (visión y fases), docs/04-arquitectura.md (stack), docs/05-confianza-y-legal.md
 - **Plan técnico:** usar `prompts/plan-base.md` (Go + Next.js en 3 repos) seguido del bloque "PLAN (extra)" de este archivo.
-- **Referencia de diseño:** dirección visual "Catálogo" en `000-landing-page.design.md` (estructura de tienda en línea: barra de aviso, banner con carrusel, franja de beneficios, cuadrícula de categorías, carrusel de oficios, bloque negro y pie en columnas). Ese archivo manda sobre lo estético; este spec, sobre la funcionalidad y las reglas de datos.
+- **Referencia de diseño:** dirección visual "Obra" en `000-landing-page.design.md` (marca Qatu: amarillo #FFB703, gris #1F2937 y Poppins; hero con foto, categorías en tarjetas, oficios, franja "Cómo funciona" y pie oscuro). Ese archivo manda sobre lo estético; este spec, sobre la funcionalidad y las reglas de datos.
 
 ## SPECIFY
 
@@ -37,7 +37,7 @@ Reglas: no se muestran precios, disponibilidad, reseñas ni cifras que no exista
 
 ## DISEÑO
 
-La dirección visual vive en **`000-landing-page.design.md`** ("Catálogo", 2026-09-26), que reemplaza las referencias anteriores (Airbnb y "Ficha técnica"). Al ejecutar `/speckit.specify`, copiar ese archivo a la carpeta del spec como `design.md`.
+La dirección visual vive en **`000-landing-page.design.md`** ("Obra", 2026-09-26), que reemplaza las referencias anteriores (Airbnb, "Ficha técnica" y "Catálogo"). Al ejecutar `/speckit.specify`, copiar ese archivo a la carpeta del spec como `design.md`.
 
 Reglas que el diseño no puede romper: sin precios, descuentos, estrellas ni cantidades inventadas; sin carrito ni compra en el piloto; la barra de aviso y el bloque final solo con información real; el bloque de suscripción depende de que se apruebe la lista de espera.
 

@@ -1,73 +1,84 @@
-# 000 — Landing: dirección visual "Catálogo"
+# 000 — Landing: dirección visual "Obra" (marca Qatu)
 
 - **Complementa a:** `000-landing-page.md` (spec funcional). Este archivo **reemplaza la sección "DISEÑO / Sistema visual"** del spec 000. La funcionalidad del spec (búsqueda, categorías, confianza, cómo funciona, Ofrece en Qatu, FAQ, pie legal, sesión) **se mantiene**.
-- **Reemplaza a:** la dirección "Ficha técnica" (propuesta del 2026-09-26, disponible en el historial de git). Motivo: se prefiere un lenguaje de tienda en línea, más familiar para el usuario de Huamanga y menos dependiente de fotografía de estudio.
-- **Referencia estética:** plantilla de e-commerce de moda (captura compartida el 2026-09-26): cabecera blanca con buscador, barra negra de aviso, banner gris con foto sobre un círculo de color y botón negro rectangular, franja de beneficios con íconos de línea, cuadrícula "Nuestros productos" con pestañas, carrusel "También te puede interesar", bloque negro de suscripción y pie blanco en columnas. Se toma la **estructura y el lenguaje visual**, no sus textos, marcas ni fotos.
+- **Reemplaza a:** las direcciones "Ficha técnica" y "Catálogo" (ambas del 2026-09-26, en el historial de git). Motivo: ya existe una **identidad de marca** (logo, paleta y tipografía) y el diseño debe partir de ella.
+- **Referencias:**
+  - Manual de marca Qatu: logo "Q + casa + llave", lema "Alquila. Contrata. Construye.", paleta `#FFB703` / `#1F2937`, tipografía Poppins SemiBold.
+  - Maqueta de la landing (2026-09-26): cabecera blanca con buscador, barra de aviso, hero con foto, categorías en tarjetas, oficios en fila, franja amarilla "Cómo funciona" y pie oscuro.
+- **Archivos de marca en `qatu-app`:** `public/brand/logo-0.png` (logo completo, fondo transparente) y `app/icon.png` (ícono para la pestaña). Pendiente: versión blanca del logo para fondos oscuros, idealmente en SVG.
 - **Fecha:** 2026-09-26
-- **Estado:** propuesta pendiente de aprobación.
+- **Estado:** aprobado para implementar.
 
 ---
 
 ## 1. Concepto
-**"Qatu, la vitrina de herramientas y oficios de Huamanga."**
-Ordenado como una tienda: blanco, negro y gris claro, tarjetas con la foto del objeto sobre fondo gris, títulos centrados con un antetítulo pequeño, y un único color de apoyo en círculos y detalles. Se ve familiar (como las tiendas en línea que ya usa la gente) y deja el protagonismo a las herramientas.
+**"Qatu, la obra resuelta en Huamanga."**
+Blanco y gris oscuro como base, amarillo de obra como energía. Transmite trabajo, herramientas y confianza sin parecer una ferretería genérica: el gris azulado `#1F2937` del logo (no negro puro) y el ámbar oscuro para textos dan una identidad propia.
 
 Tres rasgos que definen el estilo:
-1. **Blanco y negro como base.** Botones principales negros y rectangulares; texto negro; fondos grises muy claros para agrupar.
-2. **Tarjetas de catálogo.** Foto del objeto sobre gris claro, nombre centrado debajo y una etiqueta pequeña en la esquina superior derecha.
-3. **Secciones con antetítulo + título centrado** ("Explora por categoría" / "Nuestras categorías").
+1. **Amarillo como fondo, nunca como texto sobre blanco.** Botones, franjas, círculos de íconos y subrayados en amarillo, siempre con texto oscuro encima.
+2. **Gris oscuro como tinta y como botón principal.** Texto, cabecera de acción, pie y botón principal en `#1F2937`.
+3. **Tarjetas cálidas.** Fondos crema muy suaves, esquinas redondeadas de 12 px e íconos de línea grandes.
 
 ---
 
 ## 2. Adaptaciones obligatorias a las reglas de Qatu
-La referencia vende productos con precios, descuentos y calificaciones. Qatu está en piloto y **no muestra datos que no existan** (spec 000). Por eso:
+La maqueta incluye datos que no existen. El spec 000 prohíbe mostrar cifras, reseñas o promesas inventadas. Por eso:
 
-| En la referencia | En Qatu |
+| En la maqueta | En Qatu |
 |---|---|
-| Barra negra "Descuento + envío gratis" | Barra negra con información real: "Piloto en Huamanga, Ayacucho · Registrarte es gratis". Nunca descuentos ni promociones inventadas. |
-| Etiqueta de precio "₹129 Onwards" en la tarjeta | Etiqueta del tipo ("Alquiler" / "Servicio"). Cuando existan publicaciones reales (003/005), podrá mostrar "Desde S/ X" calculado de datos reales. |
-| Beneficios: envío gratis, devoluciones, soporte 24/7, pagos flexibles | Beneficios reales de Qatu: **Cuentas verificadas**, **Entrega registrada**, **Garantía clara**, **Precios en soles**. Sin "24/7" ni promesas que no se cumplen. |
-| "Recommended / You May Also Like" con estrellas y precios | En el MVP: carrusel **"Oficios para tu hogar"** con tarjetas de oficio, sin estrellas ni precios. Las estrellas solo aparecen con reseñas reales (feature 014) y la sección se renombra a "Recomendado" solo cuando haya datos. |
-| "Subscribe to our emails" | Bloque negro **"Entérate cuando abramos en tu distrito"**. Solo se activa si se aprueba la lista de espera en clarify (correo, casilla de consentimiento, Ley 29733). Mientras tanto, el bloque invita a **crear una cuenta** con un botón blanco. |
-| Íconos de favoritos y carrito en la cabecera | Sin carrito (no hay compra en el piloto). Favoritos se agrega con la feature 005. |
-| Maqueta del hero: logo "Compra · Alquila · Contrata" y atributo "Recomendaciones inteligentes" | Sin "Compra" (fase 3) ni IA (post-MVP): el logo ya está en la cabecera y el tercer atributo es "Cuentas verificadas". |
-| Moda, marcas, fotos de modelos | Herramientas y técnicos reales de Huamanga; nunca fotos de stock. |
+| Tarjeta flotante "+500 profesionales confían en Qatu" y "4.8/5, basado en 120+ reseñas" | **No se muestra** en el piloto. Se habilita solo con datos reales (reseñas de la feature 014), calculados en el servidor. |
+| "Fácil, seguro y **al mejor precio** en Huamanga" | "Fácil, seguro y con **precios claros** en Huamanga". No se afirma "mejor precio". |
+| "Equipos verificados · **Seguridad garantizada**" | "Cuentas verificadas · La verificación es un filtro, no una garantía" (docs/05). |
+| "Precios justos · Sin costos ocultos" | "Precios claros · Ves el total antes de confirmar". |
+| "Soporte local · Estamos en Ayacucho" | Se mantiene (es real: piloto en Huamanga). |
+| Paso "3. Recibe el equipo **en tu ubicación**" | "3. Recoge o recibe": el delivery es opcional y depende del arrendador (docs/02). |
+| Pie "Recibe ofertas y novedades" con suscripción | Solo si se aprueba la lista de espera: correo + **casilla de consentimiento** (Ley 29733) y texto "novedades del piloto", no "ofertas". Sin aprobación, se muestra "Crea tu cuenta gratis". |
+| Íconos de Facebook, Instagram y WhatsApp | Solo las redes que existan; si no hay ninguna, la columna no se muestra. |
+| Lema de marca "Compra · Alquila · Contrata" (versión anterior) | Se usa el lema del logo actual, "Alquila. Contrata. Construye." La compra es fase 3. |
+| Foto del hero con herramienta amarilla y negra | Válida para el prototipo; antes de publicar, foto propia. Evitar que el conjunto (amarillo + negro + herramienta) se confunda con una marca comercial de herramientas: por eso el gris azulado del logo en lugar de negro. |
 
 ---
 
 ## 3. Tokens
 
-### Color
-| Token | Valor | Uso |
-|---|---|---|
-| `--bg` | `#FFFFFF` | Fondo general |
-| `--bg-soft` | `#F5F5F5` | Banner del hero, franja de beneficios, fondo de las fotos de tarjeta |
-| `--ink` | `#111111` | Texto principal, botones principales, barra de aviso, bloque de suscripción |
-| `--ink-2` | `#555555` | Texto secundario (7,5:1 sobre blanco) |
-| `--ink-3` | `#6B6B6B` | Antetítulos y textos pequeños (5,3:1 sobre blanco) |
-| `--line` | `#E5E5E5` | Bordes y divisores de 1 px |
-| `--accent` | `#C2410C` | Terracota de Qatu: pestaña activa, foco, enlaces destacados, detalles pequeños |
-| `--accent-soft` | `#F6D9CC` | Círculo detrás de la foto del hero y fondos decorativos |
-| `--ok` | `#15803D` | Verificado / éxito |
+### Color (contrastes calculados con la fórmula WCAG)
+| Token | Valor | Uso | Contraste |
+|---|---|---|---|
+| `--bg` | `#FFFFFF` | Fondo general | — |
+| `--bg-soft` | `#F9FAFB` | Secciones alternas (oficios) | — |
+| `--cream` | `#FFF7E6` | Fondo de tarjetas de categoría y chips del hero | — |
+| `--ink` | `#1F2937` | Texto principal, botón principal, pie | 14,68:1 sobre blanco |
+| `--ink-2` | `#4B5563` | Texto secundario | 7,56:1 sobre blanco |
+| `--ink-3` | `#6B7280` | Textos pequeños y ayudas | 4,83:1 sobre blanco; 4,63:1 sobre `--bg-soft` |
+| `--line` | `#E5E7EB` | Bordes y divisores de 1 px | — |
+| `--brand` | `#FFB703` | Amarillo de marca: fondos de botón secundario destacado, franja "Cómo funciona", círculos de íconos, subrayados, foco | **1,75:1 sobre blanco: nunca como texto**. Texto `--ink` encima: 8,41:1 |
+| `--brand-soft` | `#FFF1CC` | Círculos detrás de íconos, hover de tarjetas | — |
+| `--brand-text` | `#B45309` | Amarillo para **texto** (antetítulos, palabra destacada del título, enlaces) | 5,02:1 sobre blanco; 4,71:1 sobre `--cream` |
+| `--ok` | `#15803D` | Verificado / éxito | — |
+| `--footer` | `#111827` | Pie de página | — |
+| `--footer-ink` | `#D1D5DB` / `#9CA3AF` | Texto del pie (principal / secundario) | 12,04:1 / 6,99:1 sobre el pie |
 
-Reglas: los **botones principales son negros**, no naranjas; el terracota solo marca estado activo, foco y detalles, y el tono suave solo aparece en círculos decorativos detrás de las fotos.
+Reglas:
+- El amarillo `#FFB703` **nunca lleva texto blanco** ni se usa como color de texto sobre fondo claro; para texto, `--brand-text`.
+- Botón principal: fondo `--ink`, texto blanco. Botón de acento (opcional, uno por pantalla): fondo `--brand`, texto `--ink`. Botón secundario: borde `--line`, texto `--ink`.
+- En el pie oscuro, el amarillo sí puede usarse como texto (10,16:1 sobre `#111827`).
 
 ### Tipografía
-- **Geist** (ya cargada) para todo. Se abandona Geist Mono.
-- H1 del banner: 32 → 48 px, peso 600, en MAYÚSCULAS, tracking 0.01em.
-- Subtítulo del banner: 20 → 28 px, peso 400.
-- H2 de sección: 26 → 36 px, peso 600, centrado.
-- Antetítulo de sección: 13 → 14 px, peso 400, `--ink-3`, centrado, encima del H2.
-- Cuerpo: 15 → 16 px, peso 400, interlineado 1.5.
-- Tarjetas: nombre 14 → 15 px peso 500 centrado; etiqueta de esquina 11 → 12 px.
+- **Poppins** (`next/font/google`, pesos 400, 500, 600 y 700), reemplaza a Geist. Es la tipografía del manual de marca.
+- H1 del hero: 36 → 56 px, peso 700, interlineado 1.05, tracking -0.02em. La última línea en `--brand-text`.
+- H2 de sección: 24 → 32 px, peso 600, alineado a la izquierda.
+- Antetítulo: 12 px, peso 600, MAYÚSCULAS, tracking 0.06em, `--brand-text`.
+- Cuerpo: 15 → 16 px, peso 400, interlineado 1.6, `--ink-2`.
+- Tarjetas: título 16 px peso 600; descripción 14 px `--ink-2`.
 
 ### Forma y espaciado
-- Radios pequeños: botones **0–4 px** (rectangulares, como la referencia), tarjetas 4 px, banner 4 px.
-- Separación entre secciones: 64 px móvil, 96 px escritorio. Contenedor máx. 1200 px, margen lateral 16/48 px.
-- Sin sombras en tarjetas; se separan por el fondo gris de la foto. Sombra suave solo en tarjetas del carrusel al pasar el cursor.
+- Radios: botones 8 px; chips y tarjetas 12 px; tarjeta flotante 16 px.
+- Separación entre secciones: 56 px móvil, 80 px escritorio. Contenedor máx. 1200 px, márgenes 16/48 px (componente `Container`).
+- Sombra solo en tarjetas al pasar el cursor: `0 8px 24px -12px rgb(31 41 55 / .18)`.
 
 ### Íconos
-`lucide-react`, trazo 1.5, negro, 24 px en la franja de beneficios, 20 px en la cabecera.
+`lucide-react`, trazo 1.5, `--ink`, 24–40 px. En tarjetas, el ícono grande va sin fondo; en chips y oficios, dentro de un círculo `--brand-soft`.
 
 ---
 
@@ -75,73 +86,69 @@ Reglas: los **botones principales son negros**, no naranjas; el terracota solo m
 
 | # | Sección | Descripción |
 |---|---|---|
-| 1 | **Cabecera** | Blanca, fija. Logo a la izquierda; enlaces "Alquilar", "Contratar", "Cómo funciona", "Ofrece en Qatu"; **buscador compacto** en el centro ("¿Qué necesitas?") que envía a `/buscar`; a la derecha "Iniciar sesión / Registrarme". Móvil: logo, ícono de búsqueda y menú. |
-| 2 | **Barra de aviso** | Franja negra de 40 px, texto blanco centrado 14 px: "Piloto en Huamanga, Ayacucho · Registrarte es gratis". |
-| 3 | **Hero** | Uno solo, sin carrusel (revisión 2026-09-26, maqueta con `hero-1`). Fondo `--bg-soft`. Izquierda: H1 de tres líneas "Herramientas / y servicios / a tu alcance" (la última en `--ink-2`), peso 700, 40 → 64 px; subtítulo corto; tres atributos con ícono en círculo blanco separados por divisores verticales (**Garantía documentada · Evidencia fotográfica · Cuentas verificadas**); botón negro "Explora ahora →" que baja al panel de búsqueda (`#buscar`). Derecha: foto `public/images/hero-1.webp` fundida con el fondo mediante un degradado; en móvil va arriba. Una sola imagen para ambos tamaños. |
-| 4 | **Panel de búsqueda completo** | Debajo del banner: pestañas "Alquilar herramientas / Contratar servicios" y campos ¿Qué necesitas?, Dónde (distrito, Select de shadcn) y Cuándo (calendario de shadcn cargado bajo demanda), con botón negro "Buscar". Misma función del spec 000. |
-| 5 | **Franja de beneficios** | Fondo `--bg-soft`, 4 columnas (2×2 en móvil). Ícono de línea + título 15 px peso 600 + descripción 13 px: Cuentas verificadas · Entrega registrada · Garantía clara · Precios en soles. |
-| 6 | **Nuestras categorías** | Antetítulo "Explora por categoría", H2 "Nuestras categorías", pestañas de texto "Herramientas / Oficios" (activa en negro con subrayado). Cuadrícula de 4 columnas en escritorio, 2 en móvil. Tarjeta: foto del objeto sobre `--bg-soft` (proporción 4:5), etiqueta en la esquina superior derecha y nombre centrado debajo. Cada tarjeta lleva a `/buscar` con la categoría. |
-| 7 | **Oficios para tu hogar** | Antetítulo "Servicios", H2 con flechas ‹ › a la derecha. Carrusel horizontal de tarjetas: fondo `--bg-soft`, nombre del oficio, descripción corta, botón negro pequeño "Ver técnicos" y el ícono o foto a la derecha. Sin estrellas ni precios. |
-| 8 | **Cómo funciona** | Dos columnas (Alquilar / Contratar) con pasos numerados 1-2-3 en círculos negros. |
-| 9 | **Confianza** | Texto breve y la aclaración "La verificación es un filtro, no una garantía". |
-| 10 | **Preguntas frecuentes** | Acordeón con divisores de 1 px. |
-| 11 | **Bloque negro** | Fondo `--ink`, texto blanco centrado. Con lista de espera aprobada: título "Entérate cuando abramos en tu distrito", campo de correo + botón blanco "Avisarme" y casilla de consentimiento. Sin lista de espera: "Crea tu cuenta gratis" + botón blanco "Registrarme". Decoración: dos arcos gruesos en gris oscuro en las esquinas, como la referencia. |
-| 12 | **Pie blanco** | Logo y 4 columnas: **Qatu** (Alquilar, Contratar, Cómo funciona), **Nosotros** («Qatu» significa mercado en quechua, Ofrece en Qatu), **Ayuda y políticas** (Preguntas frecuentes, Términos, Privacidad, **Libro de Reclamaciones**), **Síguenos** (solo redes que existan). Línea final con © año. |
+| 1 | **Cabecera** | Blanca, fija. Logo `logo-0` a la izquierda; enlaces "Alquilar", "Contratar", "Cómo funciona", "Ofrece en Qatu"; buscador "Buscar herramienta o servicio…" (GET a `/buscar`); a la derecha "Iniciar sesión" (texto) y "Registrarme" (botón `--ink`). Móvil: logo, búsqueda y menú. |
+| 2 | **Barra de aviso** | Franja `--footer` de 32 px, texto blanco con ícono de ubicación en `--brand`: "Piloto en Huamanga, Ayacucho · Regístrate gratis". |
+| 3 | **Hero** | Fondo blanco. Izquierda: antetítulo "ALQUILER DE HERRAMIENTAS Y SERVICIOS"; H1 de tres líneas con la última en `--brand-text`; párrafo; botones "Alquilar ahora →" (`--ink`) y "Cómo funciona" (borde); tres chips `--cream` con ícono en círculo `--brand-soft`: Cuentas verificadas, Precios claros, Soporte local. Derecha: foto `hero-1.webp` fundida con el fondo. Sin tarjeta de cifras. |
+| 4 | **Buscador** | Panel de búsqueda completo (pestañas Alquilar / Contratar, qué, dónde, cuándo) con botón `--ink`. Destino de "Explora" y del ícono de búsqueda móvil (`#buscar`). |
+| 5 | **Categorías** | Antetítulo "CATEGORÍAS", H2 "Encuentra lo que necesitas", subtítulo. Cuadrícula de 5 tarjetas (2 en móvil, desplazable): fondo `--cream`, ícono grande, nombre, descripción corta y botón pequeño "Ver equipos →". Sin precios ni "más alquiladas". |
+| 6 | **Oficios** | Fondo `--bg-soft`. Izquierda: antetítulo "SERVICIOS", H2 "Oficios para tu hogar o negocio", párrafo y botón "Contratar ahora →". Derecha: fila de oficios con ícono en círculo `--brand-soft`, nombre y dos palabras de descripción, separados por divisores; al final "Ver todos". Desplazable en móvil. |
+| 7 | **Cómo funciona** | Franja `--brand` a todo el ancho. Título "¿CÓMO FUNCIONA QATU?" y 4 pasos con ícono de línea, separados por divisores: 1. Busca · 2. Reserva · 3. Recoge o recibe · 4. Usa y devuelve. Texto `--ink`. |
+| 8 | **Confianza** | Breve: cómo verificamos, cómo se registra la entrega, y "La verificación es un filtro, no una garantía". |
+| 9 | **Preguntas frecuentes** | Acordeón con divisores de 1 px. |
+| 10 | **Pie** | Fondo `--footer`. Logo (versión blanca cuando exista) y frase "Conectamos herramientas y personas para construir un mejor Ayacucho"; columnas Enlaces, Empresa, Ayuda (con **Libro de Reclamaciones**); bloque de novedades según la regla de la sección 2; redes solo si existen. Línea final "© año Qatu". |
 
-Above the fold: en 360×640 deben verse cabecera, barra de aviso, foto del hero y título. En 1280×800, cabecera, barra, banner completo e inicio del panel de búsqueda.
+Above the fold: en 360×640 deben verse cabecera, barra de aviso, antetítulo, H1 y botón principal. En 1280×800, cabecera, barra y el hero completo con foto.
 
 ---
 
 ## 5. Fotografía
-- Fotos propias: herramientas recortadas (fondo transparente o gris `#F5F5F5`) para las tarjetas y el banner; técnicos reales con permiso firmado para el carrusel de oficios.
-- Formato AVIF/WebP con `next/image`; la foto de la primera diapositiva con `priority` (es el LCP).
-- **Mientras no haya fotos:** marcador `--bg-soft` con borde discontinuo, ícono de cámara y la leyenda de la toma que falta (ej. "FOTO 03 · Hidrolavadora recortada 4:5"). En tarjetas de oficio puede usarse el ícono de lucide grande en lugar de foto. Nunca stock.
-
-Tomas mínimas: 3 fotos de banner (herramienta en uso, técnico trabajando, taller ordenado), 8 herramientas recortadas en el mismo ángulo, 6 técnicos o manos trabajando para los oficios.
+- Fotos propias antes de publicar: herramientas en uso y técnicos reales de Huamanga con permiso firmado.
+- Formato WebP/AVIF con `next/image`; la foto del hero con `priority` (es el LCP).
+- Mientras no haya fotos para tarjetas y oficios se usan íconos de `lucide-react`; nunca stock.
 
 ---
 
 ## 6. Movimiento
-- Carrusel de oficios: desplazamiento con `scroll-snap` y flechas; sin librerías de carrusel.
-- Hover de tarjeta: la foto hace zoom 1.03 (200 ms).
-- Todo desactivado con `prefers-reduced-motion: reduce`.
-- El hero no tiene carrusel ni animaciones; `motion` no se usa por ahora.
+- Hover de tarjeta: sube 2 px y aparece la sombra (200 ms). Flecha de los botones se desplaza 2 px.
+- Sin carruseles automáticos ni parallax. Todo desactivado con `prefers-reduced-motion: reduce`.
+- `motion` no se usa; se retira la dependencia.
 
 ---
 
 ## 7. Qué NO hacer
-- Precios, descuentos, "desde S/", estrellas, cantidades o testimonios que no salgan de datos reales.
-- Carrito, envíos o devoluciones de productos (no hay compra en el piloto).
-- Botones redondeados tipo píldora; más de un color de apoyo; degradados.
-- Fotos de stock o de modelos; copiar textos, logos o fotos de la referencia.
+- Texto amarillo `#FFB703` sobre blanco o texto blanco sobre amarillo.
+- Negro puro como color de marca; usar `#1F2937`.
+- Cifras, estrellas, "más alquiladas", "mejor precio", "garantizado", ofertas o testimonios sin datos reales.
+- Carrito o compra (no hay compra en el piloto).
+- Fotos de stock; copiar marcas o logos de terceros.
 
 ---
 
 ## 8. Accesibilidad y rendimiento (sin cambios respecto al spec 000)
-- Contraste AA en todo texto; foco visible con anillo `--accent` de 2 px.
-- Carrusel accesible: botones con `aria-label`, región con `aria-roledescription="carrusel"`, pausa automática al enfocar y control de pausa visible.
+- Contraste AA en todo texto (ver tabla de tokens). Foco visible: anillo de 2 px `--brand` con separación de 2 px y borde interior `--ink` para que se vea sobre fondos claros.
 - Objetivos táctiles ≥ 44 px.
 - Lighthouse móvil: Performance ≥ 90, Accesibilidad ≥ 95, SEO ≥ 95; LCP < 2,5 s; JS inicial < 200 KB.
 
 ---
 
 ## 9. Checklist de aceptación visual
-- [ ] Barra negra de aviso con texto real, sin promociones.
-- [ ] Banner gris con foto (o marcador) sobre círculo terracota suave y botón negro rectangular; indicadores de línea.
-- [ ] Franja de 4 beneficios con íconos de línea.
-- [ ] Cuadrícula de categorías con pestañas, tarjetas sobre gris y etiqueta en la esquina (sin precio).
-- [ ] Carrusel de oficios con flechas, sin estrellas ni precios.
-- [ ] Bloque negro final y pie blanco en 4 columnas con Libro de Reclamaciones.
-- [ ] Capturas en 360×640 y 1440×900 revisadas contra este documento.
+- [ ] Logo `logo-0` en la cabecera e ícono en la pestaña.
+- [ ] Poppins en toda la página.
+- [ ] Ningún texto amarillo claro sobre blanco; antetítulos y palabra destacada en `--brand-text`.
+- [ ] Botón principal gris oscuro; amarillo solo con texto oscuro.
+- [ ] Hero sin tarjeta de cifras ni frases de "mejor precio" o "garantizado".
+- [ ] Franja amarilla "Cómo funciona" con 4 pasos.
+- [ ] Pie oscuro con Libro de Reclamaciones y sin redes inexistentes.
+- [ ] Revisado en 360×640 y 1440×900.
 
 ---
 
 ## 10. Prompt para Claude Code
 ```
-Lee el spec de la landing (funcionalidad) y su design.md (dirección visual "Catálogo"). design.md manda sobre lo estético; la funcionalidad del spec no cambia y sus reglas de datos (nada inventado) prevalecen sobre la referencia.
+Lee el spec de la landing (funcionalidad) y su design.md (dirección visual "Obra"). design.md manda sobre lo estético; las reglas de datos del spec (nada inventado) prevalecen sobre la maqueta.
 
-1. Implementa sección por sección en el orden de la tabla 4, cada una como componente en features/public/landing/components, con los textos en lib/content.ts.
-2. Usa marcadores de foto según la sección 5 mientras no existan las imágenes.
-3. Al terminar cada sección, revisa en 360x640 y 1440x900 contra el checklist de la sección 9.
-4. No agregues dependencias nuevas; usa lucide-react y los componentes de shadcn ya instalados.
+1. Implementa sección por sección en el orden de la tabla 4, cada una como componente en features/public/landing/components, con los textos en lib/content.ts y el ancho con el componente Container.
+2. Reutiliza componentes (Logo, Container, Button de shadcn, SectionHeading); no dupliques secciones ni estilos.
+3. Revisa cada sección en 360x640 y 1440x900 contra el checklist de la sección 9.
+4. No agregues dependencias nuevas; retira motion si no se usa.
 ```
