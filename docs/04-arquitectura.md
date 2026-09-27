@@ -19,7 +19,7 @@ de módulo estrictos. Se extrae un módulo a servicio solo con métrica que lo j
 | Caché y colas | Redis | **Redis** con reglas explícitas (abajo) | Sesiones, caché, rate limit, bloqueos y jobs |
 | Web | Next.js + React + TypeScript | **Se mantiene** (Next.js 16) | Sin cambios |
 | Móvil | React Native o Flutter | Fase 2: PWA primero; React Native/Expo si la tracción lo justifica | Costo de mantener dos clientes al inicio |
-| Auth | JWT / OAuth 2.0 | Sesión en cookie httpOnly + store en Redis, OTP por celular, Google opcional | Revocable, sin JWT stateless que no se puede invalidar |
+| Auth | JWT / OAuth 2.0 | Sesión en cookie httpOnly + store en Redis. Piloto: correo y contraseña + Google; después, OTP por celular como un proveedor más | Revocable, sin JWT stateless que no se puede invalidar; empezar simple sin cerrar la puerta al celular |
 | CI/CD | GitLab CI/CD | GitHub Actions | Los repos viven en GitHub |
 | Mapas | OSM / Mapbox / Google Maps | MapLibre + tiles OSM (proveedor de tiles en producción) | Sin costo inicial, sin vendor lock-in |
 | IA | Búsqueda semántica, asistente y generación en el MVP | Post-MVP (features 018 y 019) | Primero datos reales; la IA nunca inventa precios ni disponibilidad |
@@ -38,7 +38,7 @@ de módulo estrictos. Se extrae un módulo a servicio solo con métrica que lo j
 | Web | Next.js 16 (App Router), React 19, Tailwind v4, shadcn/ui, feature-sliced, bun | Ya definido en `qatu-app` |
 | BFF | Rutas `app/api` de Next como proxy server-side hacia Go | El navegador nunca llama al backend directo |
 | Gateway | `gateway.js`: un solo puerto público; el WebSocket va directo a Go | Realtime sin exponer dos puertos |
-| Auth | OTP por SMS/WhatsApp (principal), email opcional, Google; sesión en cookie httpOnly + Redis; 2FA; `require_role` | En Perú el teléfono es la identidad práctica |
+| Auth | Piloto: correo y contraseña (argon2id) + Google (OAuth 2.0 con PKCE). Después: OTP por SMS/WhatsApp (feature 022). Sesión en cookie httpOnly + Redis; `require_role` | Sin costo de SMS al inicio; el celular se suma sin rehacer nada (ver "Acceso extensible") |
 | Tiempo real | WebSocket nativo en Go con Redis pub/sub entre réplicas | Escala horizontal |
 | Notificaciones | Push web, WhatsApp Business / SMS, email | Canal por preferencia |
 | Mapas | MapLibre + tiles OSM; geocodificación con Nominatim o proveedor comercial | Sin costo inicial |
@@ -68,14 +68,22 @@ Un módulo de dominio no importa internals de otro: se comunican por su servicio
 de dominio. Cada módulo tiene su `domain` (entidades, máquinas de estado, reglas puras), sus `port`
 (interfaces) y su `service` (casos de uso); los adaptadores implementan los ports.
 
+## Acceso extensible (cuentas e identidades)
+El piloto entra con correo y contraseña o con Google, y el OTP por celular llega después. Para que ese cambio no obligue a rehacer nada:
+- **La cuenta y el acceso están separados.** `users` guarda a la persona; `auth_identities` guarda cada forma de entrar (`password`, `google` y, luego, `phone_otp`), con `UNIQUE (provider, provider_subject)`.
+- **Un contrato por proveedor.** `port.AuthProvider` con implementaciones para contraseña, Google y OTP; todas terminan en el mismo `SessionService`.
+- **Sesiones independientes del proveedor.** Redis guarda el usuario y sus roles; el proveedor usado es solo un dato de auditoría.
+- `users` ya reserva `phone` y `phone_verified_at` (nulos en el piloto) y exige correo o celular, de modo que una cuenta solo con celular será válida.
+- Una prueba de extensibilidad con un proveedor falso protege esta separación (spec 001).
+
 ## Redis: qué se guarda y qué no
 Redis acelera y coordina; **la fuente de verdad siempre es PostgreSQL**.
 
 | Uso | Detalle | TTL / política |
 |---|---|---|
 | Sesiones | `session:{id}` → usuario, roles, expiración | Igual a la sesión; revocación inmediata al cerrar sesión |
-| Códigos | OTP, verificación de email, 2FA, códigos de entrega | Minutos; máximo de intentos; los de entrega se guardan hasheados |
-| Rate limiting | Por IP y por usuario (OTP, búsqueda, mensajes, solicitudes) | Ventana deslizante |
+| Códigos | Verificación de correo, recuperación de contraseña, 2FA, códigos de entrega y, después, OTP | Minutos; máximo de intentos; los de entrega se guardan hasheados |
+| Rate limiting | Por IP y por usuario (inicio de sesión, envío de códigos, búsqueda, mensajes, solicitudes) | Ventana deslizante |
 | Idempotencia | `Idempotency-Key` de creación y pago; segunda barrera en BD | 24 h |
 | Caché de lectura | Categorías, ciudades y zonas, `platform_settings`, ficha pública de publicación, resultados de búsqueda | 60 s a 1 h según dato; **cache-aside**; invalidación al escribir |
 | Anti-estampida | `singleflight` en Go + TTL con jitter | Evita que una clave caliente golpee la BD |
@@ -134,5 +142,5 @@ Al abrir una publicación el usuario ve la ficha completa y, muy visible, **dón
 ## Riesgos y decisiones abiertas
 - **Cola de jobs:** se elige asynq (sobre Redis). Si se prefiere que los jobs sean transaccionales con Postgres, se evalúa `river`; se decide en `research.md` de la feature 010.
 - **Tiles de mapa en producción:** el servidor público de OSM no admite tráfico comercial; se necesita un proveedor de tiles.
-- **OTP:** canal (SMS, WhatsApp o ambos) y proveedor por definir; requiere un adaptador `OtpSender` además de los del patrón base.
+- **OTP (feature 022):** canal (SMS, WhatsApp o ambos) y proveedor por definir; se agrega como adaptador `OtpSender` y un nuevo proveedor de acceso, sin cambios en usuarios ni sesiones.
 - **Pagos:** el MVP usa registro manual, sin custodia; las pasarelas entran detrás de `PaymentGateway`.
