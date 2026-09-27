@@ -3,12 +3,18 @@
 ## Niveles de verificación
 | Nivel | Requisitos | Habilita |
 |---|---|---|
-| 0 | Teléfono verificado por OTP | Navegar, chatear, guardar favoritos |
+| 0 | Correo verificado (piloto). Cuando exista el acceso por celular (feature 022), también sirve el teléfono verificado por OTP | Navegar, chatear, guardar favoritos |
 | 1 | DNI (foto anverso/reverso) + selfie con prueba de vida; validación de datos de DNI | Alquilar herramientas de riesgo bajo/medio, contratar servicios |
 | 2 | Nivel 1 + historial (≥ 3 transacciones sin incidencias) o comprobante de domicilio | Alquilar herramientas de riesgo alto, reserva inmediata |
 | P (proveedor) | Nivel 1 + certificado de antecedentes (revisión manual) + referencias o certificados de oficio (ej. SENCICO) opcionales → insignia | Ofrecer servicios en el hogar |
 | N (negocio) | RUC activo | Perfil de negocio, factura |
 La verificación es un filtro, no una garantía: se comunica así en la UI y en los términos.
+
+## Acceso a la cuenta
+- **Piloto (feature 001):** correo y contraseña, o Google. Una persona es una sola cuenta aunque use varias formas de acceso.
+- **Después (feature 022):** acceso por código al celular (SMS o WhatsApp), vinculable a la misma cuenta.
+- Vincular Google a una cuenta existente exige que esa cuenta tenga el correo verificado; si no, primero se entra con la contraseña. Así se evita que alguien se apropie de una cuenta ajena.
+- Límite de intentos en inicio de sesión, códigos y recuperación; los mensajes no revelan si un correo o un celular están registrados.
 
 ## Antidesintermediación (evitar que se vayan por fuera)
 - Teléfono y dirección exacta ocultos hasta confirmar la transacción.
