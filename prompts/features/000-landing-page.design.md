@@ -30,6 +30,7 @@ La referencia vende productos con precios, descuentos y calificaciones. Qatu est
 | "Recommended / You May Also Like" con estrellas y precios | En el MVP: carrusel **"Oficios para tu hogar"** con tarjetas de oficio, sin estrellas ni precios. Las estrellas solo aparecen con reseñas reales (feature 014) y la sección se renombra a "Recomendado" solo cuando haya datos. |
 | "Subscribe to our emails" | Bloque negro **"Entérate cuando abramos en tu distrito"**. Solo se activa si se aprueba la lista de espera en clarify (correo, casilla de consentimiento, Ley 29733). Mientras tanto, el bloque invita a **crear una cuenta** con un botón blanco. |
 | Íconos de favoritos y carrito en la cabecera | Sin carrito (no hay compra en el piloto). Favoritos se agrega con la feature 005. |
+| Maqueta del hero: logo "Compra · Alquila · Contrata" y atributo "Recomendaciones inteligentes" | Sin "Compra" (fase 3) ni IA (post-MVP): el logo ya está en la cabecera y el tercer atributo es "Cuentas verificadas". |
 | Moda, marcas, fotos de modelos | Herramientas y técnicos reales de Huamanga; nunca fotos de stock. |
 
 ---
@@ -76,7 +77,7 @@ Reglas: los **botones principales son negros**, no naranjas; el terracota solo m
 |---|---|---|
 | 1 | **Cabecera** | Blanca, fija. Logo a la izquierda; enlaces "Alquilar", "Contratar", "Cómo funciona", "Ofrece en Qatu"; **buscador compacto** en el centro ("¿Qué necesitas?") que envía a `/buscar`; a la derecha "Iniciar sesión / Registrarme". Móvil: logo, ícono de búsqueda y menú. |
 | 2 | **Barra de aviso** | Franja negra de 40 px, texto blanco centrado 14 px: "Piloto en Huamanga, Ayacucho · Registrarte es gratis". |
-| 3 | **Banner (hero)** | Panel `--bg-soft` a lo ancho del contenedor. Izquierda: H1 en mayúsculas, subtítulo y **botón negro** rectangular. Derecha: foto recortada sobre un **círculo** `--accent-soft`. Carrusel de 3 diapositivas con indicadores en forma de líneas bajo el panel: (1) "ALQUILA HERRAMIENTAS · Paga solo los días que usas · Ver herramientas", (2) "CONTRATA UN TÉCNICO · Precio claro antes de confirmar · Buscar técnicos", (3) "OFRECE EN QATU · Gana con tu herramienta o tu oficio · Empezar". Avance manual (flechas y líneas) y automático cada 6 s que se pausa al pasar el cursor, al enfocar y con `prefers-reduced-motion`. |
+| 3 | **Hero** | Uno solo, sin carrusel (revisión 2026-09-26, maqueta con `hero-1`). Fondo `--bg-soft`. Izquierda: H1 de tres líneas "Herramientas / y servicios / a tu alcance" (la última en `--ink-2`), peso 700, 40 → 64 px; subtítulo corto; tres atributos con ícono en círculo blanco separados por divisores verticales (**Garantía documentada · Evidencia fotográfica · Cuentas verificadas**); botón negro "Explora ahora →" que baja al panel de búsqueda (`#buscar`). Derecha: foto `public/images/hero-1.webp` fundida con el fondo mediante un degradado; en móvil va arriba. Una sola imagen para ambos tamaños. |
 | 4 | **Panel de búsqueda completo** | Debajo del banner: pestañas "Alquilar herramientas / Contratar servicios" y campos ¿Qué necesitas?, Dónde (distrito, Select de shadcn) y Cuándo (calendario de shadcn cargado bajo demanda), con botón negro "Buscar". Misma función del spec 000. |
 | 5 | **Franja de beneficios** | Fondo `--bg-soft`, 4 columnas (2×2 en móvil). Ícono de línea + título 15 px peso 600 + descripción 13 px: Cuentas verificadas · Entrega registrada · Garantía clara · Precios en soles. |
 | 6 | **Nuestras categorías** | Antetítulo "Explora por categoría", H2 "Nuestras categorías", pestañas de texto "Herramientas / Oficios" (activa en negro con subrayado). Cuadrícula de 4 columnas en escritorio, 2 en móvil. Tarjeta: foto del objeto sobre `--bg-soft` (proporción 4:5), etiqueta en la esquina superior derecha y nombre centrado debajo. Cada tarjeta lleva a `/buscar` con la categoría. |
@@ -87,7 +88,7 @@ Reglas: los **botones principales son negros**, no naranjas; el terracota solo m
 | 11 | **Bloque negro** | Fondo `--ink`, texto blanco centrado. Con lista de espera aprobada: título "Entérate cuando abramos en tu distrito", campo de correo + botón blanco "Avisarme" y casilla de consentimiento. Sin lista de espera: "Crea tu cuenta gratis" + botón blanco "Registrarme". Decoración: dos arcos gruesos en gris oscuro en las esquinas, como la referencia. |
 | 12 | **Pie blanco** | Logo y 4 columnas: **Qatu** (Alquilar, Contratar, Cómo funciona), **Nosotros** («Qatu» significa mercado en quechua, Ofrece en Qatu), **Ayuda y políticas** (Preguntas frecuentes, Términos, Privacidad, **Libro de Reclamaciones**), **Síguenos** (solo redes que existan). Línea final con © año. |
 
-Above the fold: en 360×640 deben verse cabecera, barra de aviso, banner con título y botón. En 1280×800, cabecera, barra, banner completo e inicio del panel de búsqueda.
+Above the fold: en 360×640 deben verse cabecera, barra de aviso, foto del hero y título. En 1280×800, cabecera, barra, banner completo e inicio del panel de búsqueda.
 
 ---
 
@@ -101,11 +102,10 @@ Tomas mínimas: 3 fotos de banner (herramienta en uso, técnico trabajando, tall
 ---
 
 ## 6. Movimiento
-- Banner: transición de diapositivas por desvanecimiento de 400 ms; indicador activo que se alarga.
 - Carrusel de oficios: desplazamiento con `scroll-snap` y flechas; sin librerías de carrusel.
 - Hover de tarjeta: la foto hace zoom 1.03 (200 ms).
 - Todo desactivado con `prefers-reduced-motion: reduce`.
-- `motion` solo si hace falta para el banner; si CSS alcanza, se retira la dependencia (se decide al implementar).
+- El hero no tiene carrusel ni animaciones; `motion` no se usa por ahora.
 
 ---
 
