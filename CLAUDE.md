@@ -20,7 +20,7 @@ Detalle del stack y de la estructura de carpetas: `docs/04-arquitectura.md`.
 - Flujo: `/speckit.specify` → `/speckit.clarify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.analyze` → `/speckit.implement`.
 - En cada `/speckit.plan` se pega `prompts/plan-base.md` y el bloque "PLAN (extra)" de la feature.
 - Fuente de verdad del negocio: `docs/01-producto.md` … `docs/05-confianza-y-legal.md`. Léelos antes de especificar o planificar.
-- Dirección visual de la landing: `prompts/features/000-landing-page.design.md` ("Ficha técnica"). Si está aprobada, manda sobre lo estético del spec 000; la funcionalidad del spec no cambia.
+- Dirección visual de la landing: `prompts/features/000-landing-page.design.md` ("Catálogo"). Si está aprobada, manda sobre lo estético del spec 000; la funcionalidad del spec no cambia.
 - Nunca inventes reglas de negocio: si algo no está en `docs/` ni en el spec, márcalo `[NEEDS CLARIFICATION]`.
 
 ## Definición de terminado (toda tarea)
