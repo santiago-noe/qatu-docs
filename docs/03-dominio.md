@@ -2,7 +2,7 @@
 
 ## Módulos (bounded contexts)
 
-`identity` · `catalog` (categorías, oficios, ciudades/zonas) · `listings` (herramientas) ·
+`identity` (cuentas, identidades de acceso, roles, sesiones y verificación) · `catalog` (categorías, oficios, ciudades/zonas) · `listings` (herramientas) ·
 `providers` (perfiles de servicio, paquetes, cobertura) · `search` · `rentals` · `service-jobs`
 (solicitudes, cotizaciones, trabajos) · `payments` (cobros, ledger, liquidaciones) · `deposits` ·
 `messaging` · `notifications` · `reviews` · `disputes` · `admin` · `ai` (post-MVP)
@@ -15,8 +15,12 @@ antes de diseñarse. Se activan por `category.vertical` sin tocar el núcleo de 
 
 | Entidad                            | Campos clave                                                                                                                                                                                                                                                                                                                       |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| User                               | id, phone (único, OTP), email?, name, status, verification_level (0-3), roles[], city_id                                                                                                                                                                                                                                           |
-| IdentityVerification               | user_id, type (DNI, SELFIE, ANTECEDENTES, CERTIFICADO_OFICIO, RUC), status, reviewed_by, files (privados)                                                                                                                                                                                                                          |
+| User | id, email? (único, citext), email_verified_at, phone? (único, E.164; se usa desde la feature 022), phone_verified_at, name, avatar_url, status (active, suspended, deleted), verification_level (0-3), city_id, zone_id, version. Regla: email o phone no nulo |
+| AuthIdentity | user_id, provider (password, google; phone_otp en 022), provider_subject (correo normalizado, sub de Google, celular), secret_hash (solo password, argon2id), last_used_at. Únicos: (provider, provider_subject) y (user_id, provider) |
+| UserRole | user_id, role (client, lender, provider, support, moderator, admin), granted_by, granted_at |
+| Consent | user_id, purpose (terms, privacy, marketing), version, granted_at, revoked_at |
+| Session (Redis) | id opaco, user_id, roles, provider usado, created_at, expires_at; no depende del proveedor de acceso |
+| IdentityVerification               | user_id, type (DNI, SELFIE, ANTECEDENTES, CERTIFICADO_OFICIO, RUC), status, reviewed_by, files (privados) — feature 021 |
 | Business                           | owner_user_id, ruc, razón social, tipo (ferretería, alquiladora…) — perfil comercial opcional                                                                                                                                                                                                                                      |
 | City / Zone                        | city (Ayacucho), zonas/distritos (Huamanga, San Juan Bautista, Carmen Alto, Jesús Nazareno, Andrés Avelino Cáceres) con polígono                                                                                                                                                                                                   |
 | Category                           | árbol; vertical (RENTAL/SERVICE en el piloto; PRODUCT/SPACE en fases futuras); attributes_schema (JSON Schema); default_commission; risk_level; enabled_cities[]                                                                                                                                                                   |
