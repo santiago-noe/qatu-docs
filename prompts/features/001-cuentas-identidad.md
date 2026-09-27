@@ -26,36 +26,43 @@ Historias:
 (P1) Como visitante quiero confirmar mi correo con un código de 6 dígitos que me llega por email, y poder pedir uno nuevo si no llegó.
 (P1) Como visitante quiero registrarme o entrar con mi cuenta de Google en un solo paso.
 (P1) Como usuario quiero iniciar sesión con correo y contraseña y seguir conectado en ese dispositivo.
-(P1) Como usuario quiero recuperar mi contraseña con un enlace o código enviado a mi correo.
+(P1) Como usuario quiero recuperar mi contraseña con un código de 6 dígitos enviado a mi correo.
 (P1) Como usuario quiero cerrar sesión en este dispositivo o en todos a la vez.
 (P1) Como usuario quiero editar mi perfil básico (nombre, foto, ciudad y distrito) y ver mi nivel de verificación.
 (P1) Como usuario que entró con Google quiero poder agregar una contraseña, y como usuario con contraseña quiero vincular Google.
 (P1) Como admin quiero asignar o quitar roles internos y suspender cuentas con un motivo.
 (P2) Como usuario quiero cambiar mi contraseña estando conectado.
 (P2) Como usuario quiero ver mis sesiones activas y cerrar una en particular.
-(P2) Como usuario quiero solicitar la eliminación o exportación de mis datos (derechos ARCO).
-(P2) Como usuario quiero activar una verificación en dos pasos por correo.
+(P2) Como usuario quiero solicitar la eliminación o exportación de mis datos (derechos ARCO). La eliminación tiene 30 días para arrepentirse; luego se borran nombre, correo, foto y accesos, y se conservan anonimizados los registros que la ley exige.
+(P1) Como soporte, moderador o admin debo confirmar un código enviado a mi correo al iniciar sesión (verificación en dos pasos obligatoria para roles internos).
+(P3) Como usuario quiero activar la verificación en dos pasos de forma opcional (fase posterior).
 
 Reglas:
 - Una persona es una sola cuenta aunque tenga varias formas de acceso. Si alguien entra con Google usando un correo que ya tiene cuenta verificada, se vincula a esa cuenta; si la cuenta existente no verificó su correo, primero debe entrar con su contraseña (evita que otro se apropie de la cuenta).
 - Nivel 0 de verificación = correo verificado (docs/05). El celular verificado se suma cuando exista el acceso por OTP.
 - Sin correo verificado se puede navegar, pero no transaccionar.
-- Contraseñas con longitud mínima y comparadas contra contraseñas filtradas conocidas [NEEDS CLARIFICATION: política exacta].
+- Contraseñas de al menos 10 caracteres, sin reglas obligatorias de símbolos, y rechazadas si están en la lista de contraseñas filtradas conocidas.
+- Solo mayores de 18 años pueden crear una cuenta (se declara al registrarse; se confirma con el DNI en la feature 021).
+- La sesión dura 30 días y se renueva con el uso.
 - Límite de intentos en inicio de sesión, envío de códigos y recuperación; los mensajes no revelan si un correo existe.
 - Cuenta suspendida: no puede transaccionar, pero sí consultar su historial.
 - Consentimiento separado y versionado para términos, privacidad y comunicaciones (Ley 29733).
 - Cerrar sesión o cambiar la contraseña invalida las sesiones correspondientes de inmediato.
 ```
 
-## Preguntas guía para /speckit.clarify
-- ¿Edad mínima para registrarse (18)? ¿Cómo se declara?
-- Política de contraseña: ¿mínimo 8, 10 o 12 caracteres? ¿Se verifica contra contraseñas filtradas?
-- ¿Cuánto dura una sesión (7 o 30 días) y se renueva con el uso?
-- ¿La recuperación de contraseña usa enlace o código de 6 dígitos?
-- ¿Proveedor de correo transaccional (SMTP propio, Resend, SES) y remitente?
-- ¿Google exige correo verificado por Google para vincular automáticamente?
-- ¿La verificación en dos pasos entra en el piloto o se pospone?
-- ¿Qué datos se borran y cuáles se conservan por obligación legal al eliminar una cuenta?
+## Decisiones de clarify (2026-09-27)
+Respuestas para `/speckit.clarify`; ya reflejadas en el bloque SPECIFY.
+
+| Pregunta | Decisión |
+|---|---|
+| Edad mínima | **18 años.** Casilla de declaración al registrarse; se confirma con el DNI en la feature 021. |
+| Política de contraseña | **Mínimo 10 caracteres**, sin reglas de símbolos, y rechazo de **contraseñas filtradas** con una lista local incrustada (no se envían contraseñas a terceros). Recomendación NIST SP 800-63B. |
+| Duración de la sesión | **30 días renovables** con el uso. Se invalida al cerrar sesión, al cambiar la contraseña o al suspender la cuenta. |
+| Recuperación de contraseña | **Código de 6 dígitos** por correo, el mismo mecanismo que la verificación de correo (un solo componente de códigos). |
+| Proveedor de correo | **SMTP genérico.** Local: Mailpit. Producción: cualquier proveedor SMTP (Resend, Brevo, SES) solo cambiando variables. |
+| Vinculación con Google | Automática **solo si el correo está verificado en Google y en Qatu**. Si no, se pide entrar con la contraseña y vincular desde el perfil. |
+| Verificación en dos pasos | **Obligatoria para soporte, moderador y admin** (código por correo al iniciar sesión). Opcional para los demás en una fase posterior. |
+| Eliminación de cuenta | **Anonimizar y conservar lo legal.** 30 días para arrepentirse; luego se borran nombre, correo, foto y accesos, y se conservan anonimizados transacciones, reclamaciones y comprobantes durante el plazo que indique la asesoría legal. |
 
 ## PLAN (extra) — pegar después de prompts/plan-base.md
 ```
@@ -90,7 +97,7 @@ qatu-app (Next.js)
 - BFF en app/api/auth/*: reenvía a qatu-api y fija la cookie de sesión en el dominio de la app; el navegador nunca ve el backend.
 - proxy.ts ya protege /dashboard y redirige a invitados; se ajustan los nombres de cookie a los reales.
 
-PARÁMETROS (platform_settings o configuración): duración de sesión, TTL y reintentos de códigos, límites por minuto, longitud mínima de contraseña.
+PARÁMETROS (configuración, con estos valores iniciales): duración de sesión 30 días renovables; códigos de 6 dígitos con TTL de 15 minutos y 5 intentos; reenvío como máximo 1 por minuto; login 5 intentos por 15 minutos por cuenta e IP; contraseña mínima 10; periodo de gracia de eliminación 30 días. Los TTL, intentos y límites son valores de partida a validar en el piloto.
 
 PRUEBAS
 - Dominio y servicios (go test con tablas): registro, correo duplicado, login correcto e incorrecto, límite de intentos, verificación de correo (código válido, vencido, agotado), recuperación, vinculación Google (correo verificado vs no verificado), suspensión, roles.
