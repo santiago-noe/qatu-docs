@@ -7,7 +7,7 @@
 - **Depende de:** ninguna feature. Es la primera pantalla pública y se puede lanzar antes que 001–005. El panel de búsqueda se conecta con 005 cuando exista.
 - **Fuente de negocio:** docs/01-producto.md (visión y fases), docs/04-arquitectura.md (stack), docs/05-confianza-y-legal.md
 - **Plan técnico:** usar `prompts/plan-base.md` (Go + Next.js en 3 repos) seguido del bloque "PLAN (extra)" de este archivo.
-- **Referencia de diseño:** patrón de la portada de Airbnb Perú (panel de búsqueda en píldora, pestañas por tipo, tira de categorías, filas horizontales de tarjetas, mucho espacio en blanco). Se toma la estructura de uso, no su marca ni sus textos.
+- **Referencia de diseño:** dirección visual "Catálogo" en `000-landing-page.design.md` (estructura de tienda en línea: barra de aviso, banner con carrusel, franja de beneficios, cuadrícula de categorías, carrusel de oficios, bloque negro y pie en columnas). Ese archivo manda sobre lo estético; este spec, sobre la funcionalidad y las reglas de datos.
 
 ## SPECIFY
 
@@ -35,31 +35,11 @@ Historias:
 Reglas: no se muestran precios, disponibilidad, reseñas ni cifras que no existan (nunca datos inventados; si no hay datos reales, se omite la sección); los textos de comisiones y garantía deben coincidir con docs/01 y docs/03; sin cookies de seguimiento sin consentimiento (Ley 29733); accesibilidad WCAG 2.1 AA; la landing es pública e indexable (SEO) y no requiere sesión; Qatu se presenta como intermediario y no como empleador de proveedores; el piloto ofrece alquiler de herramientas y servicios de oficios; la compraventa de productos, los espacios, los inmuebles y los vehículos son fases posteriores (docs/01) y la landing no los promete ni los muestra como disponibles. Se puede comunicar que Qatu crecerá por etapas, sin fechas ni compromisos.
 ```
 
-## DISEÑO (referencia: portada de Airbnb Perú)
+## DISEÑO
 
-Qué se toma del patrón y cómo se adapta a Qatu. La referencia se analizó el 2026-09-26; solo se dispone de su estructura y textos, así que la paleta y las proporciones son propuestas propias.
+La dirección visual vive en **`000-landing-page.design.md`** ("Catálogo", 2026-09-26), que reemplaza las referencias anteriores (Airbnb y "Ficha técnica"). Al ejecutar `/speckit.specify`, copiar ese archivo a la carpeta del spec como `design.md`.
 
-**Estructura de la portada**
-1. Cabecera limpia y fija: logo, pestañas de tipo ("Alquilar herramientas", "Contratar servicios", "Cómo funciona"), a la derecha "Ofrece en Qatu", "Iniciar sesión" y "Registrarme". Sin barras decorativas encima; el selector de ciudad muestra solo "Ayacucho (Huamanga)" mientras el piloto sea de una ciudad.
-2. **Panel de búsqueda en píldora**, el elemento protagonista, justo bajo la cabecera:
-   - Segmentos separados por líneas finas: **¿Qué necesitas?** (texto libre con ejemplos), **Dónde** (distrito), **Cuándo** (desde – hasta; se oculta o se desactiva en "Contratar servicios") y un **botón circular de búsqueda** con el color de la marca.
-   - En móvil se compacta a una tarjeta redondeada de un solo campo que se expande al tocarla.
-   - Pestañas encima del panel para cambiar entre alquilar y contratar; al cambiar, cambian las etiquetas y los ejemplos.
-3. **Tira de categorías**: fila horizontal con un ícono y una etiqueta por categoría (construcción, carpintería, jardín, limpieza, pintura; gasfitería, electricidad, cerrajería…), con la categoría activa subrayada.
-4. **Filas horizontales de tarjetas** por tema ("Herramientas para tu obra", "Oficios para tu hogar"), con desplazamiento suave y flechas en escritorio. Cada tarjeta es una categoría (no un producto), porque no se muestran publicaciones ni precios que no existan.
-5. Secciones de confianza, cómo funciona, "Ofrece en Qatu" y preguntas frecuentes, con mucho espacio en blanco entre bloques.
-6. Pie de página en columnas (Qatu, Ofrece, Legal) con el Libro de Reclamaciones visible.
-
-**Sistema visual**
-- **Fondo blanco y superficies neutras cálidas** para que el color de marca solo aparezca donde importa (botones, búsqueda, elementos activos).
-- **Un color de acento**: el terracota de Qatu, ajustado a un tono más vivo que cumpla contraste AA con texto blanco; el hover lo oscurece. Verde solo para estados de éxito o verificación.
-- Texto casi negro sobre blanco, texto secundario en gris cálido, bordes finos y sombras suaves; esquinas redondeadas amplias (tarjetas y panel).
-- Tipografía sans-serif de una sola familia con jerarquía clara (titulares grandes y semibold, texto de apoyo regular).
-- Tarjetas con ícono grande sobre un fondo tenue por tipo (sin fotos inventadas ni fotos de stock que no se puedan respaldar).
-- Movimiento sobrio; se respeta `prefers-reduced-motion`.
-
-**Reglas de contenido**: el panel y las tarjetas no muestran precios, disponibilidad ni cantidades de publicaciones; los ejemplos de búsqueda son orientativos ("rotomartillo", "gasfitero para una fuga").
-```
+Reglas que el diseño no puede romper: sin precios, descuentos, estrellas ni cantidades inventadas; sin carrito ni compra en el piloto; la barra de aviso y el bloque final solo con información real; el bloque de suscripción depende de que se apruebe la lista de espera.
 
 ## Preguntas guía para /speckit.clarify
 
@@ -80,14 +60,14 @@ ARQUITECTURA
 
 qatu-app (Next.js 16, App Router):
 - Ruta: app/(public)/page.tsx, renderizada estática (SSG) con revalidación ISR opcional; sin llamadas al backend en tiempo de render en el MVP. Metadatos, Open Graph, sitemap.ts, robots.ts y JSON-LD (Organization, WebSite) para SEO.
-- Feature-sliced: features/public/landing/{components,lib}. Componentes de sección independientes: hero, search-panel (píldora con pestañas y campos), category-strip (tira de categorías con íconos), category-rows (filas horizontales de tarjetas de categoría con scroll-snap), how-it-works, trust, offer-cta (publicar), faq, footer-legal. Contenido textual y de categorías en features/public/landing/lib/content.ts (datos tipados, es-PE), sin hardcodear texto dentro de los componentes.
+- Feature-sliced: features/public/landing/{components,lib}. Componentes de sección independientes: announcement-bar (barra negra de aviso), hero-banner (carrusel de 3 diapositivas), search-panel (pestañas y campos), benefits-strip (4 beneficios), category-grid (cuadrícula con pestañas Herramientas/Oficios), trades-carousel (carrusel de oficios), how-it-works, trust, faq, signup-block (bloque negro), site-footer (4 columnas). Contenido textual y de categorías en features/public/landing/lib/content.ts (datos tipados, es-PE), sin hardcodear texto dentro de los componentes.
 - Panel de búsqueda: componente de cliente con estado local (pestaña activa, texto, distrito, fechas). Al enviar navega a /buscar con los parámetros en la query (q, zone, from, to, tab); hasta que exista la feature 005, /buscar muestra un aviso claro y conserva lo escrito. Los distritos salen de content.ts (docs/03). Sin llamadas al backend.
-- Sistema visual: tokens de color en app/globals.css (fondo blanco, superficies neutras cálidas, un único color de acento terracota con contraste AA, texto casi negro), tipografía única con next/font, esquinas redondeadas amplias y `prefers-reduced-motion` respetado. Íconos con lucide-react.
+- Sistema visual: el de `000-landing-page.design.md` (blanco, negro y gris claro, botones negros rectangulares, terracota solo para estado activo y detalles, Geist con next/font), `prefers-reduced-motion` respetado. Íconos con lucide-react. Carrusel sin librerías externas (scroll-snap y estado local).
 - Layout compartido: components/layout/{site-header,site-footer}. Componentes de UI con shadcn (button, accordion, card, input).
 - proxy.ts: si existe cookie de sesión válida en "/" redirige a /dashboard (regla "solo invitado" ya definida); la landing no se cachea para usuarios con sesión.
 - Enlaces de CTA a /auth/signin y /auth/... (rutas ya creadas); /terminos, /privacidad y /libro-de-reclamaciones bajo app/(public) en features/public/legal.
 - Lista de espera (solo si se aprueba en clarify): formulario en features/public/landing/components/waitlist-form.tsx con Server Action o route handler app/api/waitlist/route.ts (BFF) que reenvía a POST /api/v1/waitlist; validación en cliente y servidor; Turnstile.
-- Imágenes con next/image en WebP/AVIF con tamaños responsivos; fuente con next/font; JS inicial < 200 KB; LCP < 2,5 s en 4G lento (constitución XI). Los únicos componentes cliente son el panel de búsqueda, la tira de categorías (estado activo), el acordeón de FAQ, el menú móvil y el formulario.
+- Imágenes con next/image en WebP/AVIF con tamaños responsivos; fuente con next/font; JS inicial < 200 KB; LCP < 2,5 s en 4G lento (constitución XI). Los únicos componentes cliente son el carrusel del banner, el panel de búsqueda, las pestañas de la cuadrícula, el carrusel de oficios, el acordeón de FAQ, el menú móvil y el formulario.
 - Analítica: wrapper en components/provider/analytics-provider.tsx que solo carga tras consentimiento.
 
 qatu-api (Go, solo si hay lista de espera):
@@ -117,4 +97,3 @@ Tests y lint en verde, umbrales de Lighthouse cumplidos, textos revisados contra
 
 Ordenar así: 1) contenido y diseño (content.ts, tokens de marca), 2) layout y componentes de sección, 3) SEO y legal, 4) integración de sesión (proxy.ts), 5) lista de espera (api + BFF + formulario), 6) analítica con consentimiento, 7) pruebas e2e, accesibilidad y Lighthouse, 8) Dockerfile/gateway y despliegue. Marcar en paralelo `[P]` las secciones independientes.
 
-# Modificacion de Prueba
