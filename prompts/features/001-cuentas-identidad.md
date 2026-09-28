@@ -112,3 +112,26 @@ Tests en verde en ambos repos, migración 0002 reversible, OpenAPI y colección 
 
 ## Guía para /speckit.tasks
 Orden: 1) migración 0002 y dominio, 2) ports y servicio de sesiones, 3) contraseña (registro, login, logout), 4) verificación de correo y Mailer, 5) recuperación, 6) Google, 7) perfil, roles y suspensión, 8) rate limiting y Turnstile, 9) BFF y pantallas de qatu-app, 10) pruebas de integración y e2e. Marcar `[P]` lo que sea independiente entre qatu-api y qatu-app una vez fijado el contrato.
+
+## Estado de implementación (2026-09-28)
+Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente · 🔮 fase posterior. Implementado sin `/speckit.*` (spec y clarify en este archivo).
+
+| Historia | qatu-api | qatu-app | Estado |
+|---|---|---|---|
+| Registro con correo, nombre y contraseña; mayoría de edad y términos | ✅ `POST /auth/register` | ✅ `/auth/signup` | ✅ |
+| Confirmar correo con código de 6 dígitos y reenviarlo | ✅ `POST /auth/email/verify` y `/resend` | ❌ falta la pantalla | ⚠️ |
+| Registrarse o entrar con Google | ✅ OAuth 2.0 + PKCE, reglas de vinculación | ✅ botón y BFF (`/api/auth/google/*`) | ✅ |
+| Iniciar sesión y seguir conectado (30 días renovables) | ✅ `POST /auth/login`, sesiones en Redis | ✅ `/auth/signin`, cookie httpOnly | ✅ |
+| Recuperar la contraseña con código | ✅ `POST /auth/password/forgot` y `/reset` | ❌ falta la pantalla | ⚠️ |
+| Cerrar sesión en este dispositivo o en todos | ✅ `/auth/logout` y `/logout-all` | ⚠️ solo este dispositivo | ⚠️ |
+| Editar perfil (nombre, foto, ciudad y distrito) y ver el nivel | ⚠️ nombre y ubicación (002); foto ❌ | ⚠️ solo el distrito | ⚠️ |
+| Agregar contraseña si entró con Google | ✅ `POST /me/password` sin la actual | ❌ | ⚠️ |
+| Vincular Google desde el perfil | ❌ `POST /me/identities/google` | ❌ | ❌ |
+| Admin asigna roles internos y suspende con motivo | ✅ `/admin/users/*` y comando `admin grant` | ❌ panel admin | ⚠️ |
+| Cambiar la contraseña estando conectado | ✅ `POST /me/password` | ❌ | ⚠️ |
+| Ver sesiones activas y cerrar una | ✅ `GET /me/sessions`, `DELETE /me/sessions/{id}` | ❌ | ⚠️ |
+| Eliminación y exportación de datos (ARCO) | ❌ | ❌ | ❌ |
+| Dos pasos obligatorio para soporte, moderador y admin | ✅ `/auth/two-factor/*`, rutas internas lo exigen | ❌ falta la pantalla del código | ⚠️ |
+| Dos pasos opcional para el resto | — | — | 🔮 |
+
+Transversal: límite de intentos por IP y por cuenta ✅ · Turnstile en registro y recuperación ✅ · auditoría inmutable ✅ · contraseñas filtradas ✅ · pruebas unitarias, de integración y e2e ✅ · OpenAPI y colección Bruno ❌.
