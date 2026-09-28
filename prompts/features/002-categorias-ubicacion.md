@@ -12,6 +12,14 @@ Reglas: categorías prohibidas no pueden publicarse; cambiar una comisión no af
 - ¿Las zonas son distritos o también barrios?
 - ¿Valores iniciales de comisión por vertical?
 
+## Decisiones de clarify (2026-09-28)
+| Pregunta | Decisión |
+|---|---|
+| Profundidad del árbol de categorías | **2 niveles**: categoría > tipo (Construcción > Rotomartillo). Coincide con docs/01 y es simple de navegar en el celular. |
+| Zonas | **Solo distritos** en el piloto: Ayacucho (Huamanga), San Juan Bautista, Carmen Alto, Jesús Nazareno y Andrés Avelino Cáceres Dorregaray. El modelo permite agregar barrios después sin migrar datos. |
+| Polígonos de las zonas | **Límites oficiales**. Fuente: relaciones de OpenStreetMap (admin_level 8) derivadas de los límites del INEI; el dataset INEI simplificado se descartó porque no incluye Andrés Avelino Cáceres (Ley 30013, 2013) y tiene 4–9 vértices por distrito. Licencia ODbL: el mapa cita "© colaboradores de OpenStreetMap". |
+| Comisiones iniciales | **Referencia de docs/01**, marcadas como valores de piloto: alquiler 10 % al arrendador + 5 % de tarifa de servicio al cliente; servicios 10 % al proveedor + 5 % al cliente. Se cambian desde `platform_settings` con historial; una transacción guarda su copia (price_snapshot) y no la afecta un cambio posterior. |
+
 ## PLAN (extra) — pegar después de prompts/plan-base.md
 ```
 PostGIS para polígonos de zonas y función zona_de(punto). attributes_schema como JSON Schema validado en back y usado para renderizar formularios dinámicos en web. Seed con categorías y oficios iniciales de docs/01.
