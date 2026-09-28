@@ -18,6 +18,7 @@ Reglas: categorías prohibidas no pueden publicarse; cambiar una comisión no af
 | Profundidad del árbol de categorías | **2 niveles**: categoría > tipo (Construcción > Rotomartillo). Coincide con docs/01 y es simple de navegar en el celular. |
 | Zonas | **Solo distritos** en el piloto: Ayacucho (Huamanga), San Juan Bautista, Carmen Alto, Jesús Nazareno y Andrés Avelino Cáceres Dorregaray. El modelo permite agregar barrios después sin migrar datos. |
 | Polígonos de las zonas | **Límites oficiales**. Fuente: relaciones de OpenStreetMap (admin_level 8) derivadas de los límites del INEI; el dataset INEI simplificado se descartó porque no incluye Andrés Avelino Cáceres (Ley 30013, 2013) y tiene 4–9 vértices por distrito. Licencia ODbL: el mapa cita "© colaboradores de OpenStreetMap". |
+| Riesgo por tipo de herramienta | **Alto**: motosierra, andamios, desbrozadora, cepilladora (cortes o altura). **Bajo**: escaleras, lustradora, aspiradora industrial, proyector. **Medio**: el resto. Define la verificación mínima para alquilar (docs/05); editable desde el admin. |
 | Comisiones iniciales | **Referencia de docs/01**, marcadas como valores de piloto: alquiler 10 % al arrendador + 5 % de tarifa de servicio al cliente; servicios 10 % al proveedor + 5 % al cliente. Se cambian desde `platform_settings` con historial; una transacción guarda su copia (price_snapshot) y no la afecta un cambio posterior. |
 
 ## PLAN (extra) — pegar después de prompts/plan-base.md
