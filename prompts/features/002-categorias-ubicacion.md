@@ -25,3 +25,20 @@ Reglas: categorías prohibidas no pueden publicarse; cambiar una comisión no af
 ```
 PostGIS para polígonos de zonas y función zona_de(punto). attributes_schema como JSON Schema validado en back y usado para renderizar formularios dinámicos en web. Seed con categorías y oficios iniciales de docs/01.
 ```
+
+## Estado de implementación (2026-09-28)
+Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente · 🔮 fase posterior. Implementado sin `/speckit.*` (spec y clarify en este archivo).
+
+| Historia o regla | qatu-api | qatu-app | Estado |
+|---|---|---|---|
+| Árbol de categorías (2 niveles) con atributos (JSON Schema) y riesgo | ✅ migraciones 0003–0005, `/admin/catalog/categories` | ❌ panel admin | ⚠️ |
+| Gestionar la lista de oficios | ✅ misma tabla, vertical `service` | ❌ panel admin | ⚠️ |
+| Registrar ciudades y zonas con polígono | ⚠️ Ayacucho y sus 5 distritos por migración (límites INEI vía OSM); no hay alta de ciudades por API | — | ⚠️ |
+| `platform_settings` por ciudad y categoría con historial | ✅ `/admin/settings` (comisiones), historial en `audit_log` | ❌ panel admin | ⚠️ |
+| Activar o desactivar ciudad o categoría (feature flag) | ✅ `/admin/cities/{slug}`, alcance por ciudad | — | ✅ |
+| Detectar o elegir mi ciudad y distrito | ✅ `/geo/zone`, `/me/location` | ✅ tarjeta "Tu distrito" en el panel | ✅ |
+| Catálogo público (categorías, oficios, ciudades, zonas) | ✅ con caché en Redis e invalidación al editar | ✅ landing y `/buscar` leen el catálogo | ✅ |
+| Regla: categorías prohibidas no se publican | ⚠️ no aparecen en el catálogo público; el bloqueo al publicar se aplica en 003 | — | ⚠️ |
+| Regla: cambiar una comisión no afecta transacciones ya creadas | ⚠️ historial listo; la copia de valores (price_snapshot) llega con 006 y 008 | — | ⚠️ |
+
+Pruebas: unitarias, de integración con PostGIS y Redis reales, y e2e ✅ · OpenAPI y colección Bruno ❌.
