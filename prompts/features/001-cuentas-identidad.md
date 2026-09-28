@@ -119,10 +119,10 @@ Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente · 🔮 fase posterior. Im
 | Historia | qatu-api | qatu-app | Estado |
 |---|---|---|---|
 | Registro con correo, nombre y contraseña; mayoría de edad y términos | ✅ `POST /auth/register` | ✅ `/auth/signup` | ✅ |
-| Confirmar correo con código de 6 dígitos y reenviarlo | ✅ `POST /auth/email/verify` y `/resend` | ❌ falta la pantalla | ⚠️ |
+| Confirmar correo con código de 6 dígitos y reenviarlo | ✅ `POST /auth/email/verify` y `/resend` | ✅ `/auth/verify-email` (tras el registro y desde el panel) | ✅ |
 | Registrarse o entrar con Google | ✅ OAuth 2.0 + PKCE, reglas de vinculación | ✅ botón y BFF (`/api/auth/google/*`) | ✅ |
 | Iniciar sesión y seguir conectado (30 días renovables) | ✅ `POST /auth/login`, sesiones en Redis | ✅ `/auth/signin`, cookie httpOnly | ✅ |
-| Recuperar la contraseña con código | ✅ `POST /auth/password/forgot` y `/reset` | ❌ falta la pantalla | ⚠️ |
+| Recuperar la contraseña con código | ✅ `POST /auth/password/forgot` y `/reset` | ✅ `/auth/recovery-account` (correo con Turnstile, código y contraseña nueva) | ✅ |
 | Cerrar sesión en este dispositivo o en todos | ✅ `/auth/logout` y `/logout-all` | ⚠️ solo este dispositivo | ⚠️ |
 | Editar perfil (nombre, foto, ciudad y distrito) y ver el nivel | ⚠️ nombre y ubicación (002); foto ❌ | ⚠️ solo el distrito | ⚠️ |
 | Agregar contraseña si entró con Google | ✅ `POST /me/password` sin la actual | ❌ | ⚠️ |
@@ -131,7 +131,7 @@ Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente · 🔮 fase posterior. Im
 | Cambiar la contraseña estando conectado | ✅ `POST /me/password` | ❌ | ⚠️ |
 | Ver sesiones activas y cerrar una | ✅ `GET /me/sessions`, `DELETE /me/sessions/{id}` | ❌ | ⚠️ |
 | Eliminación y exportación de datos (ARCO) | ❌ | ❌ | ❌ |
-| Dos pasos obligatorio para soporte, moderador y admin | ✅ `/auth/two-factor/*`, rutas internas lo exigen | ❌ falta la pantalla del código | ⚠️ |
+| Dos pasos obligatorio para soporte, moderador y admin | ✅ `/auth/two-factor/*`, rutas internas lo exigen | ✅ `/auth/two-factor` tras iniciar sesión (contraseña o Google) | ✅ |
 | Dos pasos opcional para el resto | — | — | 🔮 |
 
 Transversal: límite de intentos por IP y por cuenta ✅ · Turnstile en registro y recuperación ✅ · auditoría inmutable ✅ · contraseñas filtradas ✅ · pruebas unitarias, de integración y e2e ✅ · OpenAPI y colección Bruno ❌.
