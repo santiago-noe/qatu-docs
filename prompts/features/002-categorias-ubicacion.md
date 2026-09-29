@@ -31,11 +31,11 @@ Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente · 🔮 fase posterior. Im
 
 | Historia o regla | qatu-api | qatu-app | Estado |
 |---|---|---|---|
-| Árbol de categorías (2 niveles) con atributos (JSON Schema) y riesgo | ✅ migraciones 0003–0005, `/admin/catalog/categories` | ❌ panel admin | ⚠️ |
-| Gestionar la lista de oficios | ✅ misma tabla, vertical `service` | ❌ panel admin | ⚠️ |
+| Árbol de categorías (2 niveles) con atributos (JSON Schema) y riesgo | ✅ migraciones 0003–0005, `/admin/catalog/categories` | ✅ `/admin/categorias` (JSON Schema editable) | ✅ |
+| Gestionar la lista de oficios | ✅ misma tabla, vertical `service` | ✅ `/admin/oficios` | ✅ |
 | Registrar ciudades y zonas con polígono | ⚠️ Ayacucho y sus 5 distritos por migración (límites INEI vía OSM); no hay alta de ciudades por API | — | ⚠️ |
-| `platform_settings` por ciudad y categoría con historial | ✅ `/admin/settings` (comisiones), historial en `audit_log` | ❌ panel admin | ⚠️ |
-| Activar o desactivar ciudad o categoría (feature flag) | ✅ `/admin/cities/{slug}`, alcance por ciudad | — | ✅ |
+| `platform_settings` por ciudad y categoría con historial | ✅ `/admin/settings` (comisiones), historial en `audit_log` | ✅ `/admin/comisiones`, con historial | ✅ |
+| Activar o desactivar ciudad o categoría (feature flag) | ✅ `GET /admin/cities`, `PATCH /admin/cities/{slug}`, alcance por ciudad | ✅ `/admin/ciudades` y encender o apagar categorías; el alcance por ciudad aún sin pantalla | ✅ |
 | Detectar o elegir mi ciudad y distrito | ✅ `/geo/zone`, `/me/location` | ✅ tarjeta "Tu distrito" en el panel | ✅ |
 | Catálogo público (categorías, oficios, ciudades, zonas) | ✅ con caché en Redis e invalidación al editar | ✅ landing y `/buscar` leen el catálogo | ✅ |
 | Regla: categorías prohibidas no se publican | ⚠️ no aparecen en el catálogo público; el bloqueo al publicar se aplica en 003 | — | ⚠️ |
