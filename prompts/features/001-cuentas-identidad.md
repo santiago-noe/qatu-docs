@@ -127,7 +127,7 @@ Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente · 🔮 fase posterior. Im
 | Editar perfil (nombre, foto, ciudad y distrito) y ver el nivel | ⚠️ nombre y ubicación (002); foto ❌ | ⚠️ solo el distrito | ⚠️ |
 | Agregar contraseña si entró con Google | ✅ `POST /me/password` sin la actual | ❌ | ⚠️ |
 | Vincular Google desde el perfil | ❌ `POST /me/identities/google` | ❌ | ❌ |
-| Admin asigna roles internos y suspende con motivo | ✅ `/admin/users/*` y comando `admin grant` | ❌ panel admin | ⚠️ |
+| Admin asigna roles internos y suspende con motivo | ✅ `/admin/users/*` (búsqueda exacta por correo) y comando `admin grant` | ✅ `/admin/usuarios` | ✅ |
 | Cambiar la contraseña estando conectado | ✅ `POST /me/password` | ❌ | ⚠️ |
 | Ver sesiones activas y cerrar una | ✅ `GET /me/sessions`, `DELETE /me/sessions/{id}` | ❌ | ⚠️ |
 | Eliminación y exportación de datos (ARCO) | ❌ | ❌ | ❌ |
