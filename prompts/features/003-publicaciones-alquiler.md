@@ -42,3 +42,22 @@ Reglas: mínimo 3 fotos; la foto del número de serie es privada; editar precios
 ```
 Tabla tool_listings con version; availability_blocks con period tstzrange y EXCLUDE USING gist (listing_id WITH =, period WITH &&); subida de fotos por URL prefirmada + job de procesamiento de imágenes (sharp, WebP, 3 tamaños).
 ```
+
+## Estado de implementación (2026-09-29)
+Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente.
+
+| Parte | qatu-api | qatu-app | Estado |
+|---|---|---|---|
+| 1. Migración y dominio | ✅ 0006 (perfil, publicaciones, fotos, delivery, calendario con `EXCLUDE`) y 0007 (categorías prohibidas); estados, garantía, punto público, calendario y duplicar con pruebas de tabla | — | ✅ |
+| 2. API del arrendador | ✅ `GET/PUT /me/lender` (correo verificado, condiciones versionadas, rol `lender`); `/me/listings` crear, ver, guardar con `version`, enviar, pausar, reanudar, archivar y duplicar; garantía sugerida; calendario; atributos validados con el JSON Schema de la categoría al enviar | ❌ parte 5 | ✅ |
+| 3. Fotos (MinIO, URL prefirmada, tamaños, EXIF, placa privada) | ❌ | ❌ | ❌ enviar a publicar ya exige 3 fotos listas |
+| 4. Moderación (cola, aprobar, rechazar) | ❌ hoy la primera publicación queda en revisión | ❌ | ❌ |
+| 5. qatu-app y e2e | — | ❌ | ❌ |
+
+Decisiones de la parte 2:
+- **Permisos por perfil, no por sesión.** Los roles viajan en la sesión (Redis); activar el perfil de arrendador da el rol `lender` en la base, pero las rutas de publicaciones revisan el perfil, así la persona no tiene que volver a iniciar sesión.
+- **Formulario completo con versión.** El asistente guarda todo en cada paso (`PUT` con `version`); si otra pestaña cambió la publicación, 409 `version_desactualizada`.
+- **Borrador flexible, publicación estricta.** En borrador se guardan atributos incompletos; al enviar (y al editar una publicada) se exige el esquema de la categoría, la garantía en rango, recojo o delivery y 3 fotos listas.
+- **Revisión.** Primera publicación del arrendador, categoría de riesgo alto o una rechazada que se corrige.
+- **Ubicación.** El punto de recojo debe caer en la ciudad del perfil; el distrito sale de `zone_at`. El punto público se desplaza con `APP__SECURITY__LOCATION_SECRET` (obligatorio en producción).
+- **Categoría fija tras publicar.** Para otra categoría se duplica.
