@@ -52,7 +52,7 @@ Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente.
 | 2. API del arrendador | ✅ `GET/PUT /me/lender` (correo verificado, condiciones versionadas, rol `lender`); `/me/listings` crear, ver, guardar con `version`, enviar, pausar, reanudar, archivar y duplicar; garantía sugerida; calendario; atributos validados con el JSON Schema de la categoría al enviar | ❌ parte 5 | ✅ |
 | 3. Fotos | ✅ `/me/listings/{id}/photos`: URL firmada (PUT directo al almacenamiento), confirmar, procesar en segundo plano (asynq), ordenar y quitar; 320, 800 y 1600 px en JPEG, enderezadas según EXIF y sin metadatos; placa en el bucket privado con URL firmada de 5 min | ❌ parte 5 | ✅ |
 | 4. Moderación | ✅ `/moderation/listings` (moderator y admin, con segundo paso): cola, aprobar y rechazar con motivo, con `version`; aviso por correo al arrendador; limpieza cada hora de subidas de fotos abandonadas | ❌ parte 5 | ✅ |
-| 5. qatu-app y e2e | — | ❌ | ❌ |
+| 5. qatu-app y e2e | — | ⚠️ tramo 1: activar el perfil de arrendador (`/dashboard/arrendador`), «Mis publicaciones» con sus acciones (`/dashboard/publicaciones`), crear un borrador y la sección «La herramienta» del editor con los atributos de la categoría; tarjeta en el panel; e2e con axe en móvil y escritorio. Faltan precios y garantía, logística con mapa, reglas, fotos, calendario y la cola de moderación | ⚠️ |
 
 Decisiones de la parte 2:
 - **Permisos por perfil, no por sesión.** Los roles viajan en la sesión (Redis); activar el perfil de arrendador da el rol `lender` en la base, pero las rutas de publicaciones revisan el perfil, así la persona no tiene que volver a iniciar sesión.
@@ -76,3 +76,7 @@ Decisiones de la parte 4:
 - **Bloqueo optimista** también aquí: si dos moderadores deciden la misma publicación, el segundo recibe 409.
 - **Aviso por correo** al aprobar o rechazar (con el motivo). Es un aviso: si el correo falla, la decisión ya quedó guardada. La feature 013 (notificaciones) lo llevará a la app.
 - **Subidas abandonadas.** Una tarea programada (asynq, cada hora, sin duplicarse entre instancias) borra las fotos pendientes de más de 2 horas y sus originales.
+
+Correcciones encontradas en la parte 5:
+- **Atributos heredados.** Los atributos (marca, modelo, potencia, voltaje, energía) están en la categoría raíz y las publicaciones van en el tipo. El esquema efectivo de un tipo es el de su raíz más el propio (el tipo agrega o redefine campos; `required` se une). Se usa al validar al enviar, en moderación y en el catálogo público, que es de donde la app arma el formulario.
+- **Migración 0008.** Los datos completos se exigen solo en revisión, publicada y pausada: un borrador incompleto se puede archivar y una rechazada se corrige de a pocos (antes ambas daban error 500).
