@@ -50,7 +50,7 @@ Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente.
 |---|---|---|---|
 | 1. Migración y dominio | ✅ 0006 (perfil, publicaciones, fotos, delivery, calendario con `EXCLUDE`) y 0007 (categorías prohibidas); estados, garantía, punto público, calendario y duplicar con pruebas de tabla | — | ✅ |
 | 2. API del arrendador | ✅ `GET/PUT /me/lender` (correo verificado, condiciones versionadas, rol `lender`); `/me/listings` crear, ver, guardar con `version`, enviar, pausar, reanudar, archivar y duplicar; garantía sugerida; calendario; atributos validados con el JSON Schema de la categoría al enviar | ❌ parte 5 | ✅ |
-| 3. Fotos (MinIO, URL prefirmada, tamaños, EXIF, placa privada) | ❌ | ❌ | ❌ enviar a publicar ya exige 3 fotos listas |
+| 3. Fotos | ✅ `/me/listings/{id}/photos`: URL firmada (PUT directo al almacenamiento), confirmar, procesar en segundo plano (asynq), ordenar y quitar; 320, 800 y 1600 px en JPEG, enderezadas según EXIF y sin metadatos; placa en el bucket privado con URL firmada de 5 min | ❌ parte 5 | ✅ |
 | 4. Moderación (cola, aprobar, rechazar) | ❌ hoy la primera publicación queda en revisión | ❌ | ❌ |
 | 5. qatu-app y e2e | — | ❌ | ❌ |
 
@@ -61,3 +61,11 @@ Decisiones de la parte 2:
 - **Revisión.** Primera publicación del arrendador, categoría de riesgo alto o una rechazada que se corrige.
 - **Ubicación.** El punto de recojo debe caer en la ciudad del perfil; el distrito sale de `zone_at`. El punto público se desplaza con `APP__SECURITY__LOCATION_SECRET` (obligatorio en producción).
 - **Categoría fija tras publicar.** Para otra categoría se duplica.
+
+Decisiones de la parte 3:
+- **Almacenamiento: SeaweedFS en local.** MinIO dejó de publicar imágenes de Docker; SeaweedFS (fijado en 4.48) ofrece la misma API S3. Producción sigue siendo Cloudflare R2: el código usa solo lo que R2 admite (URL firmada de PUT y GET, CORS, bucket público), por eso no hay POST firmado.
+- **Dos buckets.** `qatu-public` (fotos procesadas, se leen sin credenciales, caché de un año) y `qatu-private` (originales recién subidos y la placa). El original, que puede traer la ubicación GPS en su EXIF, se borra al procesarlo.
+- **JPEG en vez de WebP.** Go no tiene codificador WebP sin C; JPEG calidad 82 pesa poco en 1600 px. Si hace falta WebP, se genera en el borde (transformaciones de Cloudflare) sin cambiar la API.
+- **Procesamiento en Go** (sin sharp ni un servicio Node aparte): lee JPEG, PNG y WebP, rechaza imágenes de más de 50 megapíxeles antes de decodificarlas y aplana la transparencia sobre blanco.
+- **Worker en el mismo proceso** (`APP__WORKER__ENABLED`); para escalar se corre el mismo binario solo como worker. El ID de la foto es el ID del trabajo: confirmar dos veces no la procesa dos veces.
+- **Tamaño real.** La URL firmada de PUT no limita el tamaño: al confirmar se revisa el objeto (máximo 10 MB).
