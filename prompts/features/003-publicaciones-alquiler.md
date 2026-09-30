@@ -51,7 +51,7 @@ Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente.
 | 1. Migración y dominio | ✅ 0006 (perfil, publicaciones, fotos, delivery, calendario con `EXCLUDE`) y 0007 (categorías prohibidas); estados, garantía, punto público, calendario y duplicar con pruebas de tabla | — | ✅ |
 | 2. API del arrendador | ✅ `GET/PUT /me/lender` (correo verificado, condiciones versionadas, rol `lender`); `/me/listings` crear, ver, guardar con `version`, enviar, pausar, reanudar, archivar y duplicar; garantía sugerida; calendario; atributos validados con el JSON Schema de la categoría al enviar | ❌ parte 5 | ✅ |
 | 3. Fotos | ✅ `/me/listings/{id}/photos`: URL firmada (PUT directo al almacenamiento), confirmar, procesar en segundo plano (asynq), ordenar y quitar; 320, 800 y 1600 px en JPEG, enderezadas según EXIF y sin metadatos; placa en el bucket privado con URL firmada de 5 min | ❌ parte 5 | ✅ |
-| 4. Moderación (cola, aprobar, rechazar) | ❌ hoy la primera publicación queda en revisión | ❌ | ❌ |
+| 4. Moderación | ✅ `/moderation/listings` (moderator y admin, con segundo paso): cola, aprobar y rechazar con motivo, con `version`; aviso por correo al arrendador; limpieza cada hora de subidas de fotos abandonadas | ❌ parte 5 | ✅ |
 | 5. qatu-app y e2e | — | ❌ | ❌ |
 
 Decisiones de la parte 2:
@@ -69,3 +69,10 @@ Decisiones de la parte 3:
 - **Procesamiento en Go** (sin sharp ni un servicio Node aparte): lee JPEG, PNG y WebP, rechaza imágenes de más de 50 megapíxeles antes de decodificarlas y aplana la transparencia sobre blanco.
 - **Worker en el mismo proceso** (`APP__WORKER__ENABLED`); para escalar se corre el mismo binario solo como worker. El ID de la foto es el ID del trabajo: confirmar dos veces no la procesa dos veces.
 - **Tamaño real.** La URL firmada de PUT no limita el tamaño: al confirmar se revisa el objeto (máximo 10 MB).
+
+Decisiones de la parte 4:
+- **Qué ve moderación.** Datos de la publicación, categoría (riesgo y esquema de atributos), nombre del arrendador y si es su primera publicación, y las fotos públicas. No ve el punto exacto de recojo, la foto de la placa ni datos de contacto (Ley 29733: lo mínimo necesario).
+- **Nadie modera lo suyo**, aunque tenga el rol.
+- **Bloqueo optimista** también aquí: si dos moderadores deciden la misma publicación, el segundo recibe 409.
+- **Aviso por correo** al aprobar o rechazar (con el motivo). Es un aviso: si el correo falla, la decisión ya quedó guardada. La feature 013 (notificaciones) lo llevará a la app.
+- **Subidas abandonadas.** Una tarea programada (asynq, cada hora, sin duplicarse entre instancias) borra las fotos pendientes de más de 2 horas y sus originales.
