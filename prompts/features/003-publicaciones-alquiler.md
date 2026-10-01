@@ -52,7 +52,7 @@ Leyenda: ✅ hecho · ⚠️ parcial · ❌ pendiente.
 | 2. API del arrendador | ✅ `GET/PUT /me/lender` (correo verificado, condiciones versionadas, rol `lender`); `/me/listings` crear, ver, guardar con `version`, enviar, pausar, reanudar, archivar y duplicar; garantía sugerida; calendario; atributos validados con el JSON Schema de la categoría al enviar | ❌ parte 5 | ✅ |
 | 3. Fotos | ✅ `/me/listings/{id}/photos`: URL firmada (PUT directo al almacenamiento), confirmar, procesar en segundo plano (asynq), ordenar y quitar; 320, 800 y 1600 px en JPEG, enderezadas según EXIF y sin metadatos; placa en el bucket privado con URL firmada de 5 min | ❌ parte 5 | ✅ |
 | 4. Moderación | ✅ `/moderation/listings` (moderator y admin, con segundo paso): cola, aprobar y rechazar con motivo, con `version`; aviso por correo al arrendador; limpieza cada hora de subidas de fotos abandonadas | ❌ parte 5 | ✅ |
-| 5. qatu-app y e2e | — | ⚠️ tramos 1 y 2: perfil de arrendador, «Mis publicaciones» con sus acciones y el editor completo por secciones (la herramienta con sus atributos, fotos con portada y placa privada, precios y garantía sugerida, entrega con mapa MapLibre y vista previa del círculo público, delivery por distritos, reglas) con la lista de lo que falta y el envío; e2e con axe en móvil y escritorio. Faltan el calendario y la cola de moderación | ⚠️ |
+| 5. qatu-app y e2e | — | ✅ perfil de arrendador; «Mis publicaciones» con sus acciones; editor por secciones (la herramienta con sus atributos, fotos con portada y placa privada, precios y garantía sugerida, entrega con mapa MapLibre y vista previa del círculo público, delivery por distritos, reglas, calendario de bloqueos en hora de Lima) con la lista de lo que falta y el envío; cola de moderación en el panel para moderadores y admins (aprobar o rechazar con motivo). e2e con axe en móvil y escritorio | ✅ |
 
 Decisiones de la parte 2:
 - **Permisos por perfil, no por sesión.** Los roles viajan en la sesión (Redis); activar el perfil de arrendador da el rol `lender` en la base, pero las rutas de publicaciones revisan el perfil, así la persona no tiene que volver a iniciar sesión.
@@ -80,3 +80,8 @@ Decisiones de la parte 4:
 Correcciones encontradas en la parte 5:
 - **Atributos heredados.** Los atributos (marca, modelo, potencia, voltaje, energía) están en la categoría raíz y las publicaciones van en el tipo. El esquema efectivo de un tipo es el de su raíz más el propio (el tipo agrega o redefine campos; `required` se une). Se usa al validar al enviar, en moderación y en el catálogo público, que es de donde la app arma el formulario.
 - **Migración 0008.** Los datos completos se exigen solo en revisión, publicada y pausada: un borrador incompleto se puede archivar y una rechazada se corrige de a pocos (antes ambas daban error 500).
+
+Decisiones de la parte 5:
+- **Panel interno por rol.** El panel admin también recibe a moderadores: ven solo «Moderación» (sin el buscador de cuentas); un admin ve todo. qatu-api vuelve a exigir el rol en cada ruta.
+- **Calendario en días de Lima** (UTC−5 todo el año): se bloquean días completos y el fin se guarda excluido, igual que la API. Las reservas (006) aparecerán en la misma lista y no se liberan desde ahí.
+- **Helpers compartidos en `lib/`** (montos, atributos desde JSON Schema y textos de reglas): los usan el arrendador y moderación sin que una feature dependa de otra.
